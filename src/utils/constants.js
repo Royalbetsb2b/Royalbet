@@ -3,9 +3,9 @@ import abi from "./abi.json";
 // import BigNumber from "bignumber.js";
 
 //localhost
-//testnet 0x3742133f47e0120d0f508f0ada108d14ab7e171b
+//testnet 0xb21f8b6F40d2D5cb2E3Acfd48eD52EC66Dc253D0
 //main 0xAf289719FfCE9324d3ae1b7aa177bF69785F708B
-export const ContractAddress = "0x1917cF25AAde137467758F8A95Eb97a2B8475561";
+export const ContractAddress = "0xb21f8b6F40d2D5cb2E3Acfd48eD52EC66Dc253D0";
 
 export const PLATFORM_CREATOR_ADDRESS = ""
 

@@ -13,6 +13,7 @@ import {
   contractABI,
   convertBigNumberToNumber,
   generateRandomId,
+  PLATFORM_CREATOR_ADDRESS
 } from "../utils/constants";
 import { ethers, utils } from "ethers";
 import { makeCall } from "./makeCall";
