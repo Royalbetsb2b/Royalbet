@@ -214,6 +214,7 @@ export const ShopContextProvider = (props) => {
         ],
         overrides: {
           value: fees, // send 0.1 native token with the contract call
+          // gasLimit: 1000000,
         },
       });
       //add to the args
