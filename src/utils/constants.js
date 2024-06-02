@@ -3,11 +3,11 @@ import abi from "./abi.json";
 // import BigNumber from "bignumber.js";
 
 //localhost
-//testnet 0xa78A4bb2bb781EFBaa62949EeA70f11D54E3d139
+//testnet 0x448B8E17A6aECFe762f497E5aD620B23F682fc41
 //main 0xAf289719FfCE9324d3ae1b7aa177bF69785F708B
-export const ContractAddress = "0xa78A4bb2bb781EFBaa62949EeA70f11D54E3d139";
+export const ContractAddress = "0x448B8E17A6aECFe762f497E5aD620B23F682fc41";
 
-export const PLATFORM_CREATOR_ADDRESS = ""
+export const PLATFORM_CREATOR_ADDRESS = "";
 
 export const contractABI = abi;
 
