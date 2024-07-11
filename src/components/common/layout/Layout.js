@@ -9,7 +9,7 @@ import { ShopContext } from "../../../utils/contextShop";
 import Result from "../../flipresult/Result";
 import { useAddress } from "@thirdweb-dev/react";
 
-function Layout({ children }) {
+function Layout({ children, setCurrentChain }) {
   const address = useAddress();
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function Layout({ children }) {
 
   return (
     <main className="h-full min-h-screen relative bg-[#07001A]">
-      <Navbar />
+      <Navbar setCurrentChain={setCurrentChain} />
 
       {notify && <Notifiy />}
 

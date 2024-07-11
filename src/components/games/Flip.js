@@ -176,7 +176,7 @@ function Flip({ setSelectedGame }) {
               </span>
             </label>
 
-            <Switch playingas={playingas} SetPlayingas={SetPlayingas} />
+            {/* <Switch playingas={playingas} SetPlayingas={SetPlayingas} /> */}
           </div>
         </div>
       </div>

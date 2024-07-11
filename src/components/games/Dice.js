@@ -6,57 +6,86 @@ import Draggable from "react-draggable";
 export default function Dice({ setSelectedGame }) {
   const { play, loaderActive } = useContext(ShopContext);
   const [position, setPosition] = useState(120);
-  const [newPosition, setnewPosition] = useState(50);
-  const [winper, setWinPer] = useState(50);
+  const [newPosition, setNewPosition] = useState(50);
+  const [winChance, setWinChance] = useState(50);
   const [mul, setMul] = useState(2.0);
-  // const [payout, setPayout] = useState(0.05);
+  const [normalPayout, setNormalPayout] = useState(0);
 
   const [searchParams] = useSearchParams();
-  //game params states
-  const [selectedChoice, setSelectedChoice] = useState();
+  const [selectedChoice, setSelectedChoice] = useState(0);
   const [amount, setAmount] = useState(0);
   const [gametype, setGameType] = useState("dice");
-  const [range, setRange] = useState();
-  const [payout, setPayout] = useState(0.02);
-
-  //Note
-  //240 is my 100
-  //and 120 is my 50
+  const [range, setRange] = useState(6);
+  const [payout, setPayout] = useState(0);
 
   const handleDrag = (e, ui) => {
-    // Calculate the new position based on drag
     const newPositions = position + ui.deltaX;
-
-    // Set position within bounds
     const boundedPosition = Math.min(Math.max(newPositions, 0), 240);
 
-    // Update state
     setPosition(boundedPosition);
-    setnewPosition((boundedPosition / 240) * 100);
+    setNewPosition((boundedPosition / 240) * 100);
 
-    // Calculate other values based on the new position
     let newRollUnder = Math.floor((boundedPosition / 240) * 98) + 1;
-    let newMultiplier = (100 / newRollUnder).toFixed(2);
-    let newWinChance = newRollUnder.toFixed(0);
-    let newPayout = (newMultiplier / 100).toFixed(4);
+    let newWinChance = newRollUnder;
+    let newMultiplier = calculateMultiplier(newWinChance);
+    let newPayout = calculatePayout(newMultiplier, amount);
 
-    // Update states
-    setMul(parseFloat(newMultiplier));
-    setWinPer(parseFloat(newWinChance));
-    setPayout(parseFloat(newPayout));
+    setWinChance(newWinChance);
+    setMul(newMultiplier === undefined ? 0 : newMultiplier);
+    setPayout(newPayout);
+    setNormalPayout(newPayout);
   };
 
   const roll = () => {
-    // console.log("why are you mis");
-    setSelectedChoice(parseInt(newPosition?.toFixed()));
-    // setWinchance(winper);
-    setRange(100); // Set the range to 100 for the dice game
-    play(gametype, selectedChoice, amount, range, payout, searchParams);
+    setSelectedChoice(parseFloat(newPosition.toFixed(2)));
+    const newselect = parseInt(newPosition);
+    console.log(newselect, "checking thinges out");
+    const selected_choice = (newselect * 100) / 6;
+
+    setTimeout(() => {
+      play(gametype, selected_choice, amount, range, payout, searchParams);
+    }, 500);
   };
+
+  const handleInput = (e) => {
+    const value = e.target.value;
+    if (value !== 0 && value > 0) {
+      const newPayout = calculatePayout(mul, value);
+      setPayout(parseFloat(newPayout));
+      setAmount(value);
+    } else {
+      setPayout(normalPayout);
+      setAmount(value);
+    }
+  };
+
+  const calculateMultiplier = (winChance) => {
+    if (winChance <= 2) {
+      return 50;
+    } else if (winChance >= 98) {
+      return 1.02;
+    } else {
+      return 100 / winChance;
+    }
+  };
+
+  const calculatePayout = (multiplier, amount) => {
+    if (amount !== 0 && amount > 0) {
+      return multiplier !== undefined ? (amount * multiplier).toFixed(2) : 0;
+    } else {
+      return 0;
+    }
+  };
+
+  // useEffect(() => {
+  //   setGameType("dice");
+  //   setAmount(0.05);
+  // }, []);
 
   useEffect(() => {
     setGameType("dice");
     setAmount(0.05);
+    setMul(2.0); // Initialize mul with a valid number
   }, []);
 
   return (
@@ -112,12 +141,12 @@ export default function Dice({ setSelectedGame }) {
 
         <div className="flex justify-between text-[#fff] font-extrabold text-xs border border-[#2a253a] w-[100%] p-[6px] mb-[10px] rounded">
           <div className="text-center">
-            <div className="">{winper}%</div>
+            <div className="">{winChance}%</div>
             <div className="">win chance</div>
           </div>
 
           <div className="text-center">
-            <div className="">{mul.toFixed(2)}x</div>
+            <div className="">{mul?.toFixed(2)}x</div>
             <div className="">multiplier</div>
           </div>
 
@@ -159,8 +188,8 @@ export default function Dice({ setSelectedGame }) {
                 className="w-[100%] bg-transparent outline-none text-[#fff] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 type="number"
                 placeholder="Input bet amount"
-                defaultValue={0.05}
-                onChange={(e) => setAmount(e.target.value)}
+                defaultValue={payout}
+                onChange={(e) => handleInput(e)}
               />
               <div
                 onClick={roll}

@@ -1,11 +1,31 @@
+import { useChainId } from "@thirdweb-dev/react";
 import abi from "./abi.json";
 
 // import BigNumber from "bignumber.js";
 
 //localhost
-//testnet 0x448B8E17A6aECFe762f497E5aD620B23F682fc41
+//testnet 0x73Afc09C863B8023892e2b319Ee3B86A984175D1
+//testnet two 0x396aa5241a3C887dF9025674937F173468C59C2A
+//another test  0x0258EA9b2254C8Eb5cD3a4A1D64E7e86dc3f1DDA
 //main 0xAf289719FfCE9324d3ae1b7aa177bF69785F708B
-export const ContractAddress = "0x448B8E17A6aECFe762f497E5aD620B23F682fc41";
+//another main main 0x849779b5BCf1a8480bE109fe4597B7d1B68197f3
+//main bnb 0x842964990372157AC9ed2Dd60a858f36441419A4
+//main main 0x5801261CB804d72E1Ee8Ad876d56074235aD58DC
+export const ContractAddressHold = {
+  1: "",
+  56: "0x5801261CB804d72E1Ee8Ad876d56074235aD58DC",
+  137: "",
+  250: "",
+  43114: "",
+  42161: "",
+  97: "0xcDC10B78B44216903B414c9bB98E4F5159AFFF15",
+};
+
+export const getGameContractAddress = (chainId) => {
+  return ContractAddressHold[chainId] || null;
+};
+
+// export const ContractAddress = "0x73Afc09C863B8023892e2b319Ee3B86A984175D1";
 
 export const PLATFORM_CREATOR_ADDRESS = "";
 

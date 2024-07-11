@@ -9,6 +9,7 @@ export default function Sloth({ setSelectedGame }) {
     confettiWin,
     gameResult,
     setGameResult,
+    loaderActive,
     setloaderActive,
     setConfettiWin,
   } = useContext(ShopContext);
@@ -44,10 +45,10 @@ export default function Sloth({ setSelectedGame }) {
   const [indices, setIndices] = useState([0, 0, 0]);
 
   //game params states
-  const [selectedChoice, setSelectedChoice] = useState();
+  const [selectedChoice, setSelectedChoice] = useState(0);
   const [amount, setAmount] = useState(0.03);
   const [gametype, setGameType] = useState("slot");
-  const [range, setRange] = useState(11);
+  const [range, setRange] = useState(3);
   const [payout, setPayout] = useState(2);
   // Update the reels with a delay and animation effect
   let newReel1, newReel2, newReel3;
@@ -56,15 +57,27 @@ export default function Sloth({ setSelectedGame }) {
   const spin = () => {
     try {
       setLoading(true);
-      const randomNumber = Math.floor(Math.random() * 11) + 1; // Generates a number between 1 and 11
+      const randomNumber = Math.floor(Math.random() * 6) + 1; // Generates a number between 1 and 11
       console.log(randomNumber, "random checking");
-      setSelectedChoice(randomNumber);
-      setRange(emojiPool.length);
-      setPayout(amount * 2);
+      // setSelectedChoice(randomNumber);
+      // setRange(emojiPool.length);
+      // setPayout(amount * 2);
+      const calcAmount = amount * 2;
 
       newReel1 = emojiPool[Math.floor(Math.random() * emojiPool.length)];
       // let newReel2, newReel3;
-      play(gametype, randomNumber, amount, range, payout, searchParams);
+      // play(gametype, 0, 0.02, 100, 0.00, searchParams);
+      setTimeout(() => {
+        play(
+          gametype,
+          randomNumber,
+          amount,
+          emojiPool.length,
+          calcAmount,
+          searchParams
+        );
+      }, 700); // Delay of 500 milliseconds
+      // play(gametype, selectedChoice, amount, range, payout, searchParams);
 
       intervalIds.push(
         setInterval(() => {
@@ -87,7 +100,9 @@ export default function Sloth({ setSelectedGame }) {
   };
 
   const checkWin = () => {
+    console.log("We are checking you out sire");
     //use this -- confettiWin
+    // console.log(confettiWin, "initialize win");
     if (confettiWin && reel1 === reel2 && reel2 === reel3) {
       setWin(true);
     } else {
@@ -101,7 +116,7 @@ export default function Sloth({ setSelectedGame }) {
 
   useEffect(() => {
     if (gameResult) {
-      // console.log("Results gotten in here");
+      console.log("Results gotten in here");
       if (confettiWin) {
         console.log("inside confetti");
         newReel1 = emojiPool[Math.floor(Math.random() * emojiPool.length)];
@@ -212,7 +227,7 @@ export default function Sloth({ setSelectedGame }) {
                 className="w-[100%] bg-transparent outline-none text-[#fff] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 type="number"
                 placeholder="Input bet amount"
-                defaultValue={0.05}
+                defaultValue={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
               <button

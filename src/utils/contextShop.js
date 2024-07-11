@@ -6,14 +6,14 @@ import {
   useAddress,
   useContract,
   useChain,
+  useChainId,
 } from "@thirdweb-dev/react";
 import {
-  ContractAddress,
   LOCAL_URL,
   contractABI,
-  convertBigNumberToNumber,
   generateRandomId,
-  PLATFORM_CREATOR_ADDRESS
+  PLATFORM_CREATOR_ADDRESS,
+  getGameContractAddress,
 } from "../utils/constants";
 import { ethers, utils } from "ethers";
 import { makeCall } from "./makeCall";
@@ -24,6 +24,7 @@ export const ShopContext = createContext("context");
 export const ShopContextProvider = (props) => {
   const address = useAddress();
   const chain = useChain();
+  const chainIdd = useChainId();
 
   // console.log(chain, "checking chain out");
 
@@ -50,9 +51,16 @@ export const ShopContextProvider = (props) => {
   //playing as
   const [playingas, SetPlayingas] = useState("regular");
 
+  // State to control user played
+  const [hasPlayed, setHasPlayed] = useState(false);
+
   //handling chain
   const [selectedChainLocal, setSelectedChainLocal] = useState("");
 
+  const [ContractAddress, setContractAddress] = useState();
+
+  // const ContractAddress
+  console.log(ContractAddress, "in here boyyysss");
   const { contract } = useContract(ContractAddress, contractABI);
 
   const {
@@ -60,6 +68,12 @@ export const ShopContextProvider = (props) => {
     isLoading: Flipload,
     error: flipError,
   } = useContractWrite(contract, "placeBet");
+
+  const {
+    data: logResolved,
+    isLoading: loadingEvent,
+    error: errorEvent,
+  } = useContractEvents(contract, "BetResolved");
 
   //call api endpoint to save game history
   const gamePlayed = async (
@@ -97,44 +111,45 @@ export const ShopContextProvider = (props) => {
   };
 
   const handleEvent = async (log) => {
-    console.log(log, log[0], "loggers checkers ooo");
-    prevLog.current = log;
+    console.log(log[0], "loggers checkers ooo");
+    // prevLog.current = log;
     const expecter = localStorage.getItem("Expectingresult");
     // console.log(
-    //   expecter === `${address}${log[0]?.data.eventid}`,
-    //   "expeeecter",
-    //   "two three",
     //   expecter,
-    //   `${address}${log[0]?.data.eventid}`,
-    //   log[0]?.data.eventid
+    //   "one",
+    //   `${log[0]?.data?.eventid}`,
+    //   "player in game",
+    //   `${log[0]}`,
+    //   "player here",
+    //   address,
+    //   "finally"
     // );
-    if (
-      log[0]?.data?.player === address &&
-      expecter === `${address}${log[0]?.data?.eventid}`
-    ) {
+    if (expecter === `${log[0]?.data?.eventid}`) {
       localStorage.setItem(`Expectingresult`, "");
-      console.log(log[0]?.data, "checking if I got the data correctly");
+      console.log(log[0].data.player, "checking if I got the data correctly");
       setGameResult(true);
-      if (log[0]?.data.isWin === true) {
+      if (log[0].data.isWin === true) {
         console.log("in in in here win");
         const {
           gameType,
           player,
-          amount_played,
+          amountPlayed,
           payout,
           isWin,
           requestId,
           referral,
           chain,
-        } = log[0]?.data;
+        } = log[0].data;
+        //amountPlayed: amountPlayed.toString(),
+        //payout: payout.toString(),
         // setNotify(true);
         // setNotifyType("success");
         // setNotifyMsg("Game Won");
         setloaderActive(false);
         setConfettiWin(true);
-        const convertAmountPlayed = ethers.utils.formatEther(amount_played);
+        const convertAmountPlayed = ethers.utils.formatEther(amountPlayed);
         const convertPayout = ethers.utils.formatEther(payout);
-        const convertRequestId = parseFloat(requestId.toString());
+        const convertRequestId = parseFloat(requestId?.toString());
         console.log(
           convertAmountPlayed,
           convertPayout,
@@ -163,11 +178,11 @@ export const ShopContextProvider = (props) => {
     }
   };
 
-  const {
-    data: log,
-    isLoading: loadingEvent,
-    error: errorEvent,
-  } = useContractEvents(contract, "BetResolved");
+  // const {
+  //   data: log,
+  //   isLoading: loadingEvent,
+  //   error: errorEvent,
+  // } = useContractEvents(contract, "BetResolved");
 
   const play = async (
     gametype,
@@ -177,18 +192,28 @@ export const ShopContextProvider = (props) => {
     payout,
     searchParams
   ) => {
+    console.log(ContractAddress, ", joooooe");
     if (!address) {
       setNotify(true);
       setNotifyType("warn");
       setNotifyMsg("Connect wallet to proceed");
       return;
     }
-
     try {
+      console.log(
+        gametype,
+        selectedChoice,
+        amount,
+        range,
+        payout,
+        searchParams,
+        "tracking play play"
+      );
       setloaderActive(true);
 
       const fees = ethers.utils.parseEther(String(parseFloat(amount)));
       const rangeAsBigNumber = parseUnits(String(range), 18); // Assuming 18 decimal places
+      const selectedChoiceAsBigNumber = parseUnits(String(selectedChoice), 18);
       const payoutAsBigNumber = parseUnits(String(payout), 18);
       const eventId = generateRandomId(); // Generate a unique ID for the event
       console.log(eventId, "checking out eventId");
@@ -196,27 +221,29 @@ export const ShopContextProvider = (props) => {
         searchParams.get("address") !== null
           ? searchParams.get("address")
           : "0x0000000000000000000000000000000000000000";
-          const recieverValue =
-          PLATFORM_CREATOR_ADDRESS !== ""
+      const recieverValue =
+        PLATFORM_CREATOR_ADDRESS !== ""
           ? PLATFORM_CREATOR_ADDRESS
           : "0x0000000000000000000000000000000000000000";
-      localStorage.setItem(`Expectingresult`, `${address}${eventId}`);
-
+      localStorage.setItem(`Expectingresult`, `${eventId}`);
+      // Math.round(selectedChoice),
       await PlaceBet({
         args: [
           gametype,
-          Math.round(selectedChoice),
+          selectedChoiceAsBigNumber,
           rangeAsBigNumber,
           payoutAsBigNumber,
           refValue,
           eventId,
-          recieverValue
+          recieverValue,
         ],
         overrides: {
           value: fees, // send 0.1 native token with the contract call
-          // gasLimit: 1000000,
+          // gasLimit: 30000,
         },
       });
+
+      setHasPlayed(true);
       //add to the args
       // overrides: {
       //   gasLimit: 1000000,
@@ -247,11 +274,15 @@ export const ShopContextProvider = (props) => {
       }, 5000);
     }
 
-    if (log && log !== prevLog.current) {
-      // console.log(log, "kkkkkkkkkkkkkkkkkk");
-      handleEvent(log);
+    if (address && chainIdd) {
+      const contractAddress = getGameContractAddress(chainIdd);
+      setContractAddress(contractAddress);
     }
-  }, [notify, log]);
+
+    if (logResolved) {
+      handleEvent(logResolved);
+    }
+  }, [notify, address, chainIdd, logResolved]);
 
   const contextValue = {
     userData,

@@ -5,7 +5,7 @@ import { useAddress, useConnect, useDisconnect } from "@thirdweb-dev/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import Supported from "./Supported";
 
-function Navbar({}) {
+function Navbar({ setCurrentChain }) {
   const [navbar, setNavbar] = useState(false);
   const address = useAddress();
 
@@ -98,6 +98,7 @@ function Navbar({}) {
       </ul>
 
       <div className="flex items-center justify-between gap-8 relative">
+        {address && <Supported setCurrentChain={setCurrentChain} />}
         <ConnectWallet className="button_nav" />
       </div>
     </nav>

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useSwitchChain, useChain } from "@thirdweb-dev/react";
+import { useChain, useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { ShopContext } from "../../../utils/contextShop";
 
-const Supported = () => {
+const Supported = ({ setCurrentChain }) => {
   const { selectedChainLocal, setSelectedChainLocal } = useContext(ShopContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedChain, setSelectedChain] = useState("");
@@ -10,29 +10,36 @@ const Supported = () => {
 
   const switchChain = useSwitchChain();
   const chain = useChain();
+  const chainIdd = useChainId();
 
   const chains = [
-    { value: "ETHEREUM", label: "Eth Mainnet", short_code: "ETH", chain_id: 1 },
-    { value: "BINANCE", label: "BnB Mainnet", short_code: "BNB", chain_id: 56 },
+    { value: "ETH", label: "ETH", short_code: "ETH", chain_id: 1 },
+    { value: "BNB", label: "BNB", short_code: "BNB", chain_id: 56 },
     {
       value: "MATIC",
-      label: "Matic Mainnet",
+      label: "MATIC",
       short_code: "MATIC",
       chain_id: 137,
     },
     {
-      value: "USDT MATIC",
-      label: "USDC Matic",
-      short_code: "MATIC",
-      chain_id: 137,
+      value: "FTM",
+      label: "FTM",
+      short_code: "FTM",
+      chain_id: 250,
     },
     {
-      value: "ETH MATIC",
-      label: "Eth Matic",
-      short_code: "MATIC",
-      chain_id: 137,
+      value: "AVAX",
+      label: "AVAX",
+      short_code: "AVAX",
+      chain_id: 43114,
     },
-    { value: "ARBITRUM", label: "Eth Arb", short_code: "ETH", chain_id: 42161 },
+    {
+      value: "BNBT",
+      label: "BNBT",
+      short_code: "BSC",
+      chain_id: 97,
+    },
+    { value: "ARB", label: "ETH Arb", short_code: "ETH", chain_id: 42161 },
     // Add more chains as needed
   ];
 
@@ -43,6 +50,7 @@ const Supported = () => {
     // Reset the selected token when the chain changes
     setSelectedChain(chain.value);
     setSelectedChainLocal(chain.short_code);
+    setCurrentChain(chain.chain_id);
     // Close the dropdown after selecting a chain
     setIsDropdownOpen(false);
   };
@@ -54,12 +62,28 @@ const Supported = () => {
   };
 
   useEffect(() => {
+    console.log(chainIdd, chain, "bring us backoooks");
     if (chain.chainId === 1) {
-      setSelectedChain("ETHEREUM");
+      setSelectedChain("ETH");
+      setCurrentChain(1);
     } else if (chain.chainId === 56) {
-      setSelectedChain("BINANCE");
+      setSelectedChain("BNB");
+      setCurrentChain(56);
     } else if (chain.chainId === 137) {
-      setSelectedChain("ETH MATIC");
+      setSelectedChain("MATIC");
+      setCurrentChain(137);
+    } else if (chain.chainId === 250) {
+      setSelectedChain("FTM");
+      setCurrentChain(250);
+    } else if (chain.chainId === 43114) {
+      setSelectedChain("AVAX");
+      setCurrentChain(43114);
+    } else if (chain.chainId === 42161) {
+      setSelectedChain("ARB");
+      setCurrentChain(42161);
+    } else {
+      setSelectedChain("BNBT");
+      setCurrentChain(97);
     }
   }, []);
 
