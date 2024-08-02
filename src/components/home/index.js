@@ -12,42 +12,42 @@ export default function Home() {
       gameName: "Flip",
       gameInfo: "Classic Flip Game",
       winRate: "29,062",
-      svg: "./flip.svg",
+      svg: "./flip.png",
       status: "active",
     },
     {
       gameName: "Dice",
       gameInfo: "Classic Dice Game",
       winRate: "29,062",
-      svg: "./dice.svg",
+      svg: "./dices.png",
       status: "active",
     },
     {
       gameName: "Slot",
       gameInfo: "Classic Sloth Game",
       winRate: "29,062",
-      svg: "./slot.svg",
+      svg: "./slot.png",
       status: "active",
     },
     {
       gameName: "Roulette",
       gameInfo: "Classic Sloth Game",
       winRate: "29,062",
-      svg: "./roulette.svg",
+      svg: "./roulette.png",
       status: "coming soon",
     },
     {
       gameName: "Mines",
       gameInfo: "Classic Mine Game",
       winRate: "29,062",
-      svg: "./mine.svg",
+      svg: "./mine.png",
       status: "coming soon",
     },
     {
       gameName: "Hilo",
       gameInfo: "Classic Sloth Game",
       winRate: "29,062",
-      svg: "./card.svg",
+      svg: "./hilo.png",
       status: "coming soon",
     },
     // {
@@ -89,13 +89,13 @@ export default function Home() {
     <>
       {selectedGame === "" ? (
         <div className=" scroll-smooth pb-10 md:pb-0 flex flex-col items-center justify-center">
-          <h5 className="game-font text-[#FFF] text-2xl md:text-3xl pb-5 font-extrabold text-center p-3 mt-10">
+          {/* <h5 className="game-font text-[#FFF] text-2xl md:text-3xl pb-5 font-extrabold text-center p-3 mt-10">
             An open source, decentralized casino
           </h5>
           <div className="text-white font-bold text-center">
             Copy this platform with your own branding and start earning fees on
             every bet.
-          </div>
+          </div> */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-10 lg:w-[70%] lg:p-[5px] p-[20px] w-[100%] md:ml-0">
             {gamesAvailable.map((data, index) => (
               <Gamebox

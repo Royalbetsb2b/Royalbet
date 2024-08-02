@@ -13,12 +13,12 @@ import abi from "./abi.json";
 //main main 0x5801261CB804d72E1Ee8Ad876d56074235aD58DC
 export const ContractAddressHold = {
   1: "",
-  56: "0x5801261CB804d72E1Ee8Ad876d56074235aD58DC",
-  137: "",
+  56: "0x5a52B6c864F6093eeF48b8BAB67C36Fd0Be901ce",
+  137: "0x9073DaCf5AECBde325B45a20F5f3747d3ED6018F",
   250: "",
   43114: "",
   42161: "",
-  97: "0xcDC10B78B44216903B414c9bB98E4F5159AFFF15",
+  97: "0x51e77e722494F77635AF72b076c6E10DA887CE08",
 };
 
 export const getGameContractAddress = (chainId) => {

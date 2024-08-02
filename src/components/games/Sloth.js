@@ -57,7 +57,7 @@ export default function Sloth({ setSelectedGame }) {
   const spin = () => {
     try {
       setLoading(true);
-      const randomNumber = Math.floor(Math.random() * 6) + 1; // Generates a number between 1 and 11
+      const randomNumber = Math.floor(Math.random() * 3);
       console.log(randomNumber, "random checking");
       // setSelectedChoice(randomNumber);
       // setRange(emojiPool.length);
@@ -174,7 +174,7 @@ export default function Sloth({ setSelectedGame }) {
       }}
     >
       <div
-        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#000] p-1 rounded"
+        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#130D25] p-1 rounded"
         onClick={() => setSelectedGame("")}
       >
         <svg
@@ -193,16 +193,16 @@ export default function Sloth({ setSelectedGame }) {
       <div className="flex flex-col items-center rounded-2xl bg-[#130D25] w-[90%] md:w-[28%] justify-start scroll-m-0 overflow-y-scroll scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] text-white text-opacity-60 p-2">
         <div className="flex flex-col mt-3">
           <h5 className="game-font text-[#FFF] text-2xl md:text-3xl pb-5 font-extrabold text-center p-3">
-            #Slot
+            Slot
           </h5>
-          <div className="w-100 flex justify-center items-center">
-            {/* {winner === null
+          {/* <div className="w-100 flex justify-center items-center">
+            {winner === null
               ? "Waiting…"
               : winner
               ? "🤑 Pure skill! 🤑"
-              : loserMessages[Math.floor(Math.random() * loserMessages.length)]} */}
+              : loserMessages[Math.floor(Math.random() * loserMessages.length)]}
             Hi messages
-          </div>
+          </div> */}
         </div>
         <div className="border-b mb-5 w-4/5 border-[#ffffff1d]"></div>
 

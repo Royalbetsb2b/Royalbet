@@ -26,7 +26,7 @@ function Flip({ setSelectedGame }) {
   const [amount, setAmount] = useState(0);
   const [gametype, setGameType] = useState("");
   const [range, setRange] = useState();
-  const [payout, setPayout] = useState();
+  const [payout, setPayout] = useState(0);
 
   const handleChoice = (event) => {
     console.log("lets seee", event.target.value);
@@ -34,11 +34,17 @@ function Flip({ setSelectedGame }) {
     setSelectedChoice(event.target.value === "heads" ? 1 : 0);
   };
   const handleAmountChange = (event) => {
-    console.log("more seeing", event.target.value);
+    // console.log("more seeing", event.target.value);
     setSelectedOption(event.target.value);
     setAmount(event.target.value);
-    setPayout(parseInt(event.target.value) * 2);
+    setPayout(event.target.value * 2);
     setRange(2);
+    console.log(
+      event.target.value,
+      typeof payout,
+      event.target.value * 2,
+      "her inside ooooo"
+    );
   };
 
   useEffect(() => {
@@ -49,7 +55,8 @@ function Flip({ setSelectedGame }) {
     }
 
     setGameType("flip");
-  }, [playingas]);
+    console.log(payout, "her inside ooooo two");
+  }, [playingas, payout]);
 
   return (
     <div
@@ -59,7 +66,7 @@ function Flip({ setSelectedGame }) {
       }}
     >
       <div
-        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#000] p-1 rounded"
+        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#130D25] p-1 rounded"
         onClick={() => setSelectedGame("")}
       >
         <svg
@@ -176,7 +183,7 @@ function Flip({ setSelectedGame }) {
               </span>
             </label>
 
-            {/* <Switch playingas={playingas} SetPlayingas={SetPlayingas} /> */}
+            <Switch playingas={playingas} SetPlayingas={SetPlayingas} />
           </div>
         </div>
       </div>

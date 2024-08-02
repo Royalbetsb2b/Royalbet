@@ -107,7 +107,7 @@ function Referrals() {
             </div>
           </div>
 
-          <div className=" w-full md:w-[70%] to-[#130D25] from-[#000] bg-gradient-to-br mt-10 rounded-md">
+          {/* <div className=" w-full md:w-[70%] to-[#130D25] from-[#000] bg-gradient-to-br mt-10 rounded-md">
             <div className="p-5 flex items-center relative justify-around w-full text-[#FFF]">
               <div className="flex w-[100%] md:w-2/4 justify-between">
                 <div className="flex flex-col items-center">
@@ -135,7 +135,7 @@ function Referrals() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </>
       ) : (
         <div className="text-[#FFF] text-center font-bold rounded-lg w-[300px] h-[374px] bg-[#130D25] flex flex-col justify-center items-center">

@@ -30,7 +30,7 @@ function Navbar({ setCurrentChain }) {
         to="/"
         className="md:text-lg flex font-extrabold text-sm items-center gap-2"
       >
-        <img className="h-10" src="/casino-logo.webp" alt="" />
+        <img className="h-24" src="/logo.png" alt="" />
         <h1 className="text-white">Royal Bets</h1>
       </Link>
       <ul

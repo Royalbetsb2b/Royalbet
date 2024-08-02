@@ -4,7 +4,7 @@ import { ShopContext } from "../../utils/contextShop";
 import Draggable from "react-draggable";
 
 export default function Dice({ setSelectedGame }) {
-  const { play, loaderActive } = useContext(ShopContext);
+  const { play, loaderActive, chain } = useContext(ShopContext);
   const [position, setPosition] = useState(120);
   const [newPosition, setNewPosition] = useState(50);
   const [winChance, setWinChance] = useState(50);
@@ -16,7 +16,7 @@ export default function Dice({ setSelectedGame }) {
   const [amount, setAmount] = useState(0);
   const [gametype, setGameType] = useState("dice");
   const [range, setRange] = useState(6);
-  const [payout, setPayout] = useState(0);
+  const [payout, setPayout] = useState(0.05);
 
   const handleDrag = (e, ui) => {
     const newPositions = position + ui.deltaX;
@@ -96,7 +96,7 @@ export default function Dice({ setSelectedGame }) {
       }}
     >
       <div
-        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#000] p-1 rounded"
+        className="absolute z-[99999] text-[#fff] left-5 top-7 cursor-pointer bg-[#130D25] p-1 rounded"
         onClick={() => setSelectedGame("")}
       >
         <svg
@@ -115,7 +115,7 @@ export default function Dice({ setSelectedGame }) {
       <div className="flex flex-col items-center rounded-2xl bg-[#130D25] w-[100%] md:w-[28%] justify-start scroll-m-0 overflow-y-scroll scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] text-white text-opacity-60 p-3">
         <div className="flex flex-col mt-3">
           <h5 className="game-font text-[#FFF] text-2xl md:text-3xl font-extrabold text-center p-3">
-            #Dice
+            Dice
           </h5>
           <div className="w-100 flex justify-center items-center">
             <svg
@@ -151,7 +151,10 @@ export default function Dice({ setSelectedGame }) {
           </div>
 
           <div className="text-center">
-            <div className="">{payout}ETH</div>
+            <div className="">
+              {payout}
+              {!chain ? "ETH" : chain?.chain}
+            </div>
             <div className="">Payout</div>
           </div>
         </div>

@@ -24,7 +24,7 @@ export default function Gamebox({
       <div className="content w-[100%]">
         {status === "active" ? (
           <>
-            <div className="product-name">{gameInfo}</div>
+            {/* <div className="product-name">{gameInfo}</div> */}
             {/* <div className="rating">Win rate ({winRate})</div> */}
 
             {/* <div className="flex justify-center items-center w-[100%] p-1">
@@ -35,7 +35,7 @@ export default function Gamebox({
           </>
         ) : (
           <>
-            <div className="brand">{gameName}</div>
+            {/* <div className="brand">{gameName}</div> */}
             <div className="brand">Coming Soon</div>
           </>
         )}

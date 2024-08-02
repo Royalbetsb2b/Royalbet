@@ -26,7 +26,7 @@ export const ShopContextProvider = (props) => {
   const chain = useChain();
   const chainIdd = useChainId();
 
-  // console.log(chain, "checking chain out");
+  // console.log(chain, chainIdd, "checking chain out");
 
   /* global BigInt */
 
@@ -60,7 +60,7 @@ export const ShopContextProvider = (props) => {
   const [ContractAddress, setContractAddress] = useState();
 
   // const ContractAddress
-  console.log(ContractAddress, "in here boyyysss");
+  // console.log(ContractAddress, "in here boyyysss");
   const { contract } = useContract(ContractAddress, contractABI);
 
   const {
@@ -111,7 +111,7 @@ export const ShopContextProvider = (props) => {
   };
 
   const handleEvent = async (log) => {
-    console.log(log[0], "loggers checkers ooo");
+    // console.log(log[0], "loggers checkers ooo");
     // prevLog.current = log;
     const expecter = localStorage.getItem("Expectingresult");
     // console.log(
@@ -126,10 +126,10 @@ export const ShopContextProvider = (props) => {
     // );
     if (expecter === `${log[0]?.data?.eventid}`) {
       localStorage.setItem(`Expectingresult`, "");
-      console.log(log[0].data.player, "checking if I got the data correctly");
+      // console.log(log[0].data.player, "checking if I got the data correctly");
       setGameResult(true);
       if (log[0].data.isWin === true) {
-        console.log("in in in here win");
+        // console.log("in in in here win");
         const {
           gameType,
           player,
@@ -150,12 +150,12 @@ export const ShopContextProvider = (props) => {
         const convertAmountPlayed = ethers.utils.formatEther(amountPlayed);
         const convertPayout = ethers.utils.formatEther(payout);
         const convertRequestId = parseFloat(requestId?.toString());
-        console.log(
-          convertAmountPlayed,
-          convertPayout,
-          convertRequestId,
-          "testing them accordingly"
-        );
+        // console.log(
+        //   convertAmountPlayed,
+        //   convertPayout,
+        //   convertRequestId,
+        //   "testing them accordingly"
+        // );
 
         await gamePlayed(
           gameType,
@@ -168,7 +168,7 @@ export const ShopContextProvider = (props) => {
           chain
         );
       } else {
-        console.log("in in in in here loss");
+        // console.log("in in in in here loss");
         // setNotify(true);
         // setNotifyType("warn");
         // setNotifyMsg("Game Lost");
@@ -192,7 +192,7 @@ export const ShopContextProvider = (props) => {
     payout,
     searchParams
   ) => {
-    console.log(ContractAddress, ", joooooe");
+    // console.log(ContractAddress, ", joooooe");
     if (!address) {
       setNotify(true);
       setNotifyType("warn");
@@ -200,15 +200,15 @@ export const ShopContextProvider = (props) => {
       return;
     }
     try {
-      console.log(
-        gametype,
-        selectedChoice,
-        amount,
-        range,
-        payout,
-        searchParams,
-        "tracking play play"
-      );
+      // console.log(
+      //   gametype,
+      //   selectedChoice,
+      //   amount,
+      //   range,
+      //   payout,
+      //   searchParams,
+      //   "tracking play play"
+      // );
       setloaderActive(true);
 
       const fees = ethers.utils.parseEther(String(parseFloat(amount)));
@@ -216,7 +216,7 @@ export const ShopContextProvider = (props) => {
       const selectedChoiceAsBigNumber = parseUnits(String(selectedChoice), 18);
       const payoutAsBigNumber = parseUnits(String(payout), 18);
       const eventId = generateRandomId(); // Generate a unique ID for the event
-      console.log(eventId, "checking out eventId");
+      console.log(payout, payoutAsBigNumber, "checking out payout things");
       const refValue =
         searchParams.get("address") !== null
           ? searchParams.get("address")
@@ -231,7 +231,7 @@ export const ShopContextProvider = (props) => {
         args: [
           gametype,
           selectedChoiceAsBigNumber,
-          rangeAsBigNumber,
+          // rangeAsBigNumber,
           payoutAsBigNumber,
           refValue,
           eventId,
