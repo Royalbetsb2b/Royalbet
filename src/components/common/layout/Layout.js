@@ -8,13 +8,27 @@ import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../../utils/contextShop";
 import Result from "../../flipresult/Result";
 import { useAddress } from "@thirdweb-dev/react";
+import Depositmodal from "../../modals/Depositmodal";
+import Usernamemodal from "../../modals/Usernamemodal";
+import Webhooknotify from "../../modals/Webhooknotify";
 
 function Layout({ children, setCurrentChain }) {
   const address = useAddress();
   const navigate = useNavigate();
 
-  const { notify, loader, setNotify, setNotifyType, setNotifyMsg, gameResult } =
-    useContext(ShopContext);
+  const {
+    notify,
+    loader,
+    setNotify,
+    setNotifyType,
+    setNotifyMsg,
+    gameResult,
+    depositModal,
+    usernameModal,
+    webhookCalled,
+    catchAddress,
+    webhookRecieved,
+  } = useContext(ShopContext);
   useEffect(() => {
     // if (!address) {
     //   setNotify(true);
@@ -33,6 +47,9 @@ function Layout({ children, setCurrentChain }) {
       {/* {loader && <Preloader loader={loader} />} */}
 
       {gameResult && <Result />}
+      {depositModal && <Depositmodal />}
+      {usernameModal && <Usernamemodal />}
+      {webhookRecieved && <Webhooknotify />}
       {children}
       <Footer />
     </main>

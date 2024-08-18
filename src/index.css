@@ -503,6 +503,105 @@ code {
   font-weight: 800 !important;
   color: #fff !important;
   white-space: nowrap !important;
-  background: #1cba6b !important;
+  background: #090ca9 !important;
+  /* background: linear-gradient(#090ca9, #be36eb) !important; */
+}
+
+/* ConnectWallet mobile styles */
+@media screen and (max-width: 768px) {
+  .button_nav {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    border-radius: 0.75rem !important;
+    border-width: 1px !important;
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    white-space: nowrap !important;
+    background: #090ca9 !important;
+    min-width: 53px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    /* background: linear-gradient(#090ca9, #be36eb) !important; */
+  }
+
+  .tw-connected-wallet {
+    width: 20px !important;
+    overflow: hidden;
+  }
+
+  .tw-connected-wallet .css-1b5osxr {
+    display: none !important;
+  }
+
+  .tw-connected-wallet__wallet-icon {
+    margin-right: 0 !important;
+  }
 }
 /* button nav */
+
+/* Swaitch wallet toggle */
+.navside .switch {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #666;
+  --main-color: #323232;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  width: 50px;
+  height: 20px;
+}
+
+.navside .toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.navside .slider {
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-colorcolor);
+  transition: 0.3s;
+}
+
+.navside .slider:before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  border: 2px solid var(--main-color);
+  border-radius: 5px;
+  left: -2px;
+  bottom: 2px;
+  background-color: var(--bg-color);
+  box-shadow: 0 3px 0 var(--main-color);
+  transition: 0.3s;
+}
+
+.navside .toggle:checked + .slider {
+  background-color: var(--input-focus);
+}
+
+.navside .toggle:checked + .slider:before {
+  transform: translateX(2em);
+}

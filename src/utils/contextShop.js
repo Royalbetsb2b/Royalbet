@@ -18,6 +18,7 @@ import {
 import { ethers, utils } from "ethers";
 import { makeCall } from "./makeCall";
 import { parseUnits } from "ethers/lib/utils";
+import io from "socket.io-client";
 
 export const ShopContext = createContext("context");
 
@@ -46,8 +47,7 @@ export const ShopContextProvider = (props) => {
   const [confettiWin, setConfettiWin] = useState(false);
   const [confettiLoss, setConfettiLoss] = useState(false);
   const [gameResult, setGameResult] = useState(false);
-  //logs
-  const prevLog = useRef();
+
   //playing as
   const [playingas, SetPlayingas] = useState("regular");
 
@@ -57,10 +57,31 @@ export const ShopContextProvider = (props) => {
   //handling chain
   const [selectedChainLocal, setSelectedChainLocal] = useState("");
 
+  //local wallet
+  //handle wallet type
+  const [switchWalletType, setSwitchWalletType] = useState("live"); //its of type "local" and "live"
+  const [depositModal, setDepositModal] = useState(false);
+
+  //userprofile if connected on local wallet
+  const [userProfile, setUserprofile] = useState();
+
+  //open username enter modal
+  const [usernameModal, setusernameModal] = useState(false);
+  //check if user has previously been registered
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  //notify for webhook
+  const [webhookCalled, setWehookCalled] = useState(false);
+  const [webhookRecieved, setWehookRecived] = useState(false);
+  const [webhookType, setWehookType] = useState(false);
+  const [webhookconfetti, setWebhookConfetti] = useState(false);
+
+  //webhook catch address
+  const [catchAddress, setCatchAddress] = useState("");
+
   const [ContractAddress, setContractAddress] = useState();
 
   // const ContractAddress
-  // console.log(ContractAddress, "in here boyyysss");
   const { contract } = useContract(ContractAddress, contractABI);
 
   const {
@@ -75,7 +96,7 @@ export const ShopContextProvider = (props) => {
     error: errorEvent,
   } = useContractEvents(contract, "BetResolved");
 
-  //call api endpoint to save game history
+  //call api endpoints
   const gamePlayed = async (
     type,
     is_win,
@@ -96,6 +117,7 @@ export const ShopContextProvider = (props) => {
       const body = {
         type: type,
         is_win: is_win,
+        wallet: chain === "wallet" ? "local" : "live",
         amount_played: amount_played,
         payout: payout,
         player: player,
@@ -110,26 +132,110 @@ export const ShopContextProvider = (props) => {
     }
   };
 
+  const loginWallet = async (addresssub, username) => {
+    try {
+      // setLoading(true);
+      const endpoint = `${LOCAL_URL}/account_signin_signup`;
+      const headers = {
+        // Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const body = {
+        address: addresssub,
+        username: username,
+      };
+      const response = await makeCall(endpoint, body, headers, "post");
+
+      localStorage.setItem("token", response.token);
+      setUserprofile(response.user);
+      setIsRegistered(true);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "catch error");
+    }
+  };
+
+  //for deposit
+  const depositInWallet = async (asset, assetcoin) => {
+    try {
+      const apiUrl = `https://min-api.cryptocompare.com/data/price?fsym=${asset}&tsyms=USD`;
+      const headersProce = {
+        "Content-Type": "application/json",
+      };
+      const responsePrice = await makeCall(apiUrl, {}, headersProce, "get");
+
+      if (responsePrice.Response === "Error") {
+        throw new Error(response.Message);
+      }
+
+      const data = responsePrice.USD;
+
+      const endpoint = `${LOCAL_URL}/deposit`;
+      const token = await localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const body = {
+        asset: assetcoin,
+        current_price: data,
+      };
+      const response = await makeCall(endpoint, body, headers, "post");
+      return response;
+    } catch (error) {
+      console.log(error, "catch error");
+    }
+  };
+
+  //for withdrawal
+  const withdrawalInWallet = async (asset, address, amount, convert_price) => {
+    try {
+      setLoading(true);
+      const endpoint = `${LOCAL_URL}/withdraw`;
+      const token = await localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const body = {
+        asset: asset,
+        address: address,
+        amount: amount,
+        convert_price: convert_price,
+      };
+      const response = await makeCall(endpoint, body, headers, "post");
+      return response;
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "catch error");
+    }
+  };
+
+  //check if address is correct
+  const checkAddressCorrect = async (address_check, chain, asset) => {
+    try {
+      setLoading(true);
+      const endpoint = `${LOCAL_URL}/verify_address/${address_check}/${chain}/${asset}`;
+      const token = await localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const response = await makeCall(endpoint, {}, headers, "get");
+      return response;
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "catch error");
+    }
+  };
+
   const handleEvent = async (log) => {
-    // console.log(log[0], "loggers checkers ooo");
-    // prevLog.current = log;
     const expecter = localStorage.getItem("Expectingresult");
-    // console.log(
-    //   expecter,
-    //   "one",
-    //   `${log[0]?.data?.eventid}`,
-    //   "player in game",
-    //   `${log[0]}`,
-    //   "player here",
-    //   address,
-    //   "finally"
-    // );
     if (expecter === `${log[0]?.data?.eventid}`) {
       localStorage.setItem(`Expectingresult`, "");
-      // console.log(log[0].data.player, "checking if I got the data correctly");
       setGameResult(true);
       if (log[0].data.isWin === true) {
-        // console.log("in in in here win");
         const {
           gameType,
           player,
@@ -140,22 +246,12 @@ export const ShopContextProvider = (props) => {
           referral,
           chain,
         } = log[0].data;
-        //amountPlayed: amountPlayed.toString(),
-        //payout: payout.toString(),
-        // setNotify(true);
-        // setNotifyType("success");
-        // setNotifyMsg("Game Won");
+
         setloaderActive(false);
         setConfettiWin(true);
         const convertAmountPlayed = ethers.utils.formatEther(amountPlayed);
         const convertPayout = ethers.utils.formatEther(payout);
         const convertRequestId = parseFloat(requestId?.toString());
-        // console.log(
-        //   convertAmountPlayed,
-        //   convertPayout,
-        //   convertRequestId,
-        //   "testing them accordingly"
-        // );
 
         await gamePlayed(
           gameType,
@@ -168,10 +264,6 @@ export const ShopContextProvider = (props) => {
           chain
         );
       } else {
-        // console.log("in in in in here loss");
-        // setNotify(true);
-        // setNotifyType("warn");
-        // setNotifyMsg("Game Lost");
         setloaderActive(false);
         setConfettiLoss(true);
       }
@@ -200,23 +292,6 @@ export const ShopContextProvider = (props) => {
       return;
     }
     try {
-      // console.log(
-      //   gametype,
-      //   selectedChoice,
-      //   amount,
-      //   range,
-      //   payout,
-      //   searchParams,
-      //   "tracking play play"
-      // );
-      setloaderActive(true);
-
-      const fees = ethers.utils.parseEther(String(parseFloat(amount)));
-      const rangeAsBigNumber = parseUnits(String(range), 18); // Assuming 18 decimal places
-      const selectedChoiceAsBigNumber = parseUnits(String(selectedChoice), 18);
-      const payoutAsBigNumber = parseUnits(String(payout), 18);
-      const eventId = generateRandomId(); // Generate a unique ID for the event
-      console.log(payout, payoutAsBigNumber, "checking out payout things");
       const refValue =
         searchParams.get("address") !== null
           ? searchParams.get("address")
@@ -225,30 +300,86 @@ export const ShopContextProvider = (props) => {
         PLATFORM_CREATOR_ADDRESS !== ""
           ? PLATFORM_CREATOR_ADDRESS
           : "0x0000000000000000000000000000000000000000";
-      localStorage.setItem(`Expectingresult`, `${eventId}`);
-      // Math.round(selectedChoice),
-      await PlaceBet({
-        args: [
-          gametype,
-          selectedChoiceAsBigNumber,
-          // rangeAsBigNumber,
-          payoutAsBigNumber,
-          refValue,
-          eventId,
-          recieverValue,
-        ],
-        overrides: {
-          value: fees, // send 0.1 native token with the contract call
-          // gasLimit: 30000,
-        },
-      });
+      if (switchWalletType === "live") {
+        setloaderActive(true);
 
-      setHasPlayed(true);
-      //add to the args
-      // overrides: {
-      //   gasLimit: 1000000,
-      //   value: fees, // send 0.1 native token with the contract call
-      // },
+        const fees = ethers.utils.parseEther(String(parseFloat(amount)));
+        const selectedChoiceAsBigNumber = parseUnits(
+          String(selectedChoice),
+          18
+        );
+        const payoutAsBigNumber = parseUnits(String(payout), 18);
+        const eventId = generateRandomId(); // Generate a unique ID for the event
+        localStorage.setItem(`Expectingresult`, `${eventId}`);
+        // Math.round(selectedChoice),
+        await PlaceBet({
+          args: [
+            gametype,
+            selectedChoiceAsBigNumber,
+            // rangeAsBigNumber,
+            payoutAsBigNumber,
+            refValue,
+            eventId,
+            recieverValue,
+          ],
+          overrides: {
+            value: fees, // send 0.1 native token with the contract call
+            // gasLimit: 30000,
+          },
+        });
+
+        setHasPlayed(true);
+      } else {
+        setloaderActive(true);
+
+        //check if the user's balance is enough
+        if (parseFloat(userProfile.balance) < amount) {
+          setNotify(true);
+          setNotifyType("warn");
+          setNotifyMsg("Insufficient funds");
+          setloaderActive(false);
+          return;
+        }
+
+        const endpoint = `${LOCAL_URL}/place_bet`;
+        const token = await localStorage.getItem("token");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+        const body = {
+          gameType: gametype,
+          selection: selectedChoice,
+          payout: payout,
+          referral: refValue,
+          betAmount: amount,
+          feeReceiver: recieverValue,
+        };
+        const response = await makeCall(endpoint, body, headers, "post");
+        console.log(response, "ahhh response");
+        setGameResult(true);
+        if (!response.win) {
+          setloaderActive(false);
+          setConfettiLoss(true);
+          setUserprofile(response.user);
+          return;
+        }
+        setloaderActive(false);
+        setConfettiWin(true);
+        setUserprofile(response.user);
+        const duplicateId = generateRandomId(); // Generate a unique ID for the duplicated id
+        await gamePlayed(
+          gametype,
+          response.win,
+          amount,
+          payout,
+          userProfile.username,
+          duplicateId,
+          refValue,
+          "wallet"
+        );
+        return;
+      }
     } catch (error) {
       console.log(error, "error ini");
       setloaderActive(false);
@@ -282,7 +413,64 @@ export const ShopContextProvider = (props) => {
     if (logResolved) {
       handleEvent(logResolved);
     }
-  }, [notify, address, chainIdd, logResolved]);
+  }, [
+    notify,
+    address,
+    chainIdd,
+    logResolved,
+    confettiWin,
+    confettiLoss,
+    userProfile,
+  ]);
+
+  let socket; // Declare socket outside of the try block to access it in the cleanup function
+
+  useEffect(() => {
+    if (webhookCalled) {
+      try {
+        // Connect to the server
+        const live = "https://royalbets-backend.onrender.com";
+        socket = io.connect(live);
+
+        // Log when the connection is established
+        socket.on("connect", () => {
+          console.log("Connection established with the server");
+        });
+
+        socket.on(`DepositSuccess${catchAddress}`, (data) => {
+          if (data.status === "success") {
+            setWehookCalled(false);
+            setWehookRecived(true);
+            // setCatchAddress("");
+            setWehookType("deposit");
+            //call confetti and update balance
+            setWebhookConfetti(true);
+            setUserprofile((profile) => ({
+              ...profile,
+              balance: data.userBalance,
+            }));
+          }
+        });
+
+        socket.on(`WithdrawalSuccess${catchAddress}`, (data) => {
+          if (data.status === "success") {
+            setWehookCalled(false);
+            setWehookRecived(true);
+            // setCatchAddress("");
+            setWehookType("withdrawal");
+            //call confetti and update balance for withdrawal
+            setWebhookConfetti(true);
+            setUserprofile((profile) => ({
+              ...profile,
+              balance: data.userBalance,
+            }));
+          }
+        });
+      } catch (error) {
+        console.log(error, "repayment");
+      }
+    }
+  }, []);
 
   const contextValue = {
     userData,
@@ -314,6 +502,29 @@ export const ShopContextProvider = (props) => {
     SetPlayingas,
     selectedChainLocal,
     setSelectedChainLocal,
+    switchWalletType,
+    setSwitchWalletType,
+    depositModal,
+    setDepositModal,
+    userProfile,
+    setUserprofile,
+    loginWallet,
+    depositInWallet,
+    withdrawalInWallet,
+    checkAddressCorrect,
+    usernameModal,
+    setusernameModal,
+    isRegistered,
+    setIsRegistered,
+    webhookCalled,
+    setWehookCalled,
+    catchAddress,
+    setCatchAddress,
+    webhookType,
+    webhookconfetti,
+    setWebhookConfetti,
+    webhookRecieved,
+    setWehookRecived,
   };
 
   return (

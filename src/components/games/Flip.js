@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ethers } from "ethers";
 import Svgloader from "../preloader/Svgloader";
-import { ethDataRegular, ethDataWhales } from "../../utils/data";
+import { ethDataLocal, ethDataRegular, ethDataWhales } from "../../utils/data";
 import Switch from "../switchplayer/Switch";
 import { ShopContext } from "../../utils/contextShop";
 
@@ -18,6 +18,7 @@ function Flip({ setSelectedGame }) {
     selectedChainLocal,
     playingas,
     SetPlayingas,
+    switchWalletType,
   } = useContext(ShopContext);
 
   const [searchParams] = useSearchParams();
@@ -48,7 +49,9 @@ function Flip({ setSelectedGame }) {
   };
 
   useEffect(() => {
-    if (playingas === "regular") {
+    if (switchWalletType === "local") {
+      SetTomap(ethDataLocal);
+    } else if (playingas === "regular" && switchWalletType !== "local") {
       SetTomap(ethDataRegular);
     } else {
       SetTomap(ethDataWhales);
@@ -56,7 +59,7 @@ function Flip({ setSelectedGame }) {
 
     setGameType("flip");
     console.log(payout, "her inside ooooo two");
-  }, [playingas, payout]);
+  }, [playingas, payout, switchWalletType]);
 
   return (
     <div
@@ -148,7 +151,10 @@ function Flip({ setSelectedGame }) {
                   onChange={handleAmountChange}
                 />
                 <span className="checkmark p-3 game-font text-sm font-extrabold md:text-xs">
-                  {eth.eth} {selectedChainLocal !== "" && selectedChainLocal}
+                  {eth.eth}{" "}
+                  {switchWalletType === "local"
+                    ? "$"
+                    : selectedChainLocal !== "" && selectedChainLocal}
                 </span>
               </label>
             </div>
@@ -183,7 +189,9 @@ function Flip({ setSelectedGame }) {
               </span>
             </label>
 
-            <Switch playingas={playingas} SetPlayingas={SetPlayingas} />
+            {switchWalletType !== "local" && (
+              <Switch playingas={playingas} SetPlayingas={SetPlayingas} />
+            )}
           </div>
         </div>
       </div>

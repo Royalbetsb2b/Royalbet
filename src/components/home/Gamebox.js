@@ -16,7 +16,7 @@ export default function Gamebox({
       onClick={() => status === "active" && setSelectedGame(gameName)}
       style={{
         borderRadius: "8px",
-        background: `linear-gradient(180deg, rgba(19, 13, 37, 0.00) 0%, rgba(19, 13, 37, 0.80) 46.95%, #130D25 100%), url(${svg}), lightgray 50% / cover no-repeat`,
+        background: `url(${svg}), lightgray 50% / cover no-repeat`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}

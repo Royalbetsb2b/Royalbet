@@ -1,18 +1,66 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { shortenAddress } from "../../../utils/trauncate";
 import { useAddress, useConnect, useDisconnect } from "@thirdweb-dev/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import Supported from "./Supported";
+import { ShopContext } from "../../../utils/contextShop";
+import Localwallet from "./Localwallet";
+import { LOCAL_URL } from "../../../utils/constants";
+import { makeCall } from "../../../utils/makeCall";
 
 function Navbar({ setCurrentChain }) {
+  const {
+    switchWalletType,
+    setSwitchWalletType,
+    setUserprofile,
+    setusernameModal,
+    loginWallet,
+    isRegistered,
+    setIsRegistered,
+  } = useContext(ShopContext);
   const [navbar, setNavbar] = useState(false);
+
   const address = useAddress();
 
-  //fixing
-  // const connect = useConnect();
-  // const disconnect = useDisconnect();
-  // const buttonAction = isConnected ? disconnect : connect;
+  //check if address is correct
+  const checkUserRegistered = async () => {
+    try {
+      // setLoading(true);
+      const endpoint = `${LOCAL_URL}/check_user/${address}`;
+      // const token = await localStorage.getItem("token");
+      const headers = {
+        // Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const response = await makeCall(endpoint, {}, headers, "get");
+      if (!response.data) {
+        //call modal to input username and create account
+        setusernameModal(true);
+        return;
+      }
+
+      const responseReq = await loginWallet(address, "dummy");
+      console.log(responseReq, "checking responseReq and thinges");
+    } catch (error) {
+      // setLoading(false);
+      console.log(error, "catch error");
+    }
+  };
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleToggle = () => {
+    setSwitchWalletType(switchWalletType === "live" ? "local" : "live");
+
+    setIsChecked(!isChecked);
+  };
+
+  useEffect(() => {
+    if (switchWalletType === "local" && address) {
+      checkUserRegistered();
+    }
+  }, [switchWalletType, isRegistered]);
 
   return (
     <nav
@@ -30,8 +78,8 @@ function Navbar({ setCurrentChain }) {
         to="/"
         className="md:text-lg flex font-extrabold text-sm items-center gap-2"
       >
-        <img className="h-24" src="/logo.png" alt="" />
-        <h1 className="text-white">Royal Bets</h1>
+        <img className="h-12" src="/logo.png" alt="" />
+        <h1 className="hidden md:block text-white">Royal Bets</h1>
       </Link>
       <ul
         className={`md:flex transition-all z-50 md:flex-row flex-col  justify-center md:h-auto md:relative border-2 md:border-none fixed top-20 md:top-0 md:left-8 left-4 py-8 md:py-0 bg-[#000] border-[#FFF] w-48 rounded-md  md:w-1/5 md:bg-transparent md:gap-10 items-start gap-4 pl-6 ${
@@ -65,11 +113,11 @@ function Navbar({ setCurrentChain }) {
             LEADERBOARD
           </Link>
         </li>
-        <li className="md:text-sm text-xs font-medium md:font-semibold whitespace-nowrap">
+        {/* <li className="md:text-sm text-xs font-medium md:font-semibold whitespace-nowrap">
           <Link to="/UPCOMING" onClick={() => setNavbar(false)}>
             UPCOMING
           </Link>
-        </li>
+        </li> */}
 
         <div className="flex gap-6">
           <a href="https://twitter.com/@ethbets_">
@@ -97,9 +145,34 @@ function Navbar({ setCurrentChain }) {
         </div>
       </ul>
 
-      <div className="flex items-center justify-between gap-8 relative">
-        {address && <Supported setCurrentChain={setCurrentChain} />}
-        <ConnectWallet className="button_nav" />
+      <div className="flex items-center justify-between gap-2 relative">
+        {switchWalletType === "live" ? (
+          <>
+            {address && <Supported setCurrentChain={setCurrentChain} />}
+            <ConnectWallet className="button_nav" />
+          </>
+        ) : (
+          <>{isRegistered && <Localwallet />}</>
+        )}
+
+        {address && (
+          <div className="w-auto relative navside flex flex-col">
+            <div className="text-[12px] text-[#FFF] font-light text-center">
+              {switchWalletType}
+            </div>
+
+            <label className="switch">
+              <input
+                className="toggle"
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+              <span className="slider"></span>
+              <span className="card-side"></span>
+            </label>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -48,3 +48,36 @@ export const ethDataWhales = [
     eth: "10",
   },
 ];
+
+export const ethDataLocal = [
+  {
+    id: 1,
+    currency: "$",
+    eth: "10",
+  },
+  {
+    id: 2,
+    currency: "$",
+    eth: "30",
+  },
+  {
+    id: 3,
+    currency: "$",
+    eth: "50",
+  },
+  {
+    id: 4,
+    currency: "$",
+    eth: "100",
+  },
+  {
+    id: 5,
+    currency: "$",
+    eth: "500",
+  },
+  {
+    id: 6,
+    currency: "$",
+    eth: "1000",
+  },
+];

@@ -12,6 +12,7 @@ export default function Sloth({ setSelectedGame }) {
     loaderActive,
     setloaderActive,
     setConfettiWin,
+    switchWalletType,
   } = useContext(ShopContext);
 
   const [searchParams] = useSearchParams();
@@ -46,7 +47,7 @@ export default function Sloth({ setSelectedGame }) {
 
   //game params states
   const [selectedChoice, setSelectedChoice] = useState(0);
-  const [amount, setAmount] = useState(0.03);
+  const [amount, setAmount] = useState();
   const [gametype, setGameType] = useState("slot");
   const [range, setRange] = useState(3);
   const [payout, setPayout] = useState(2);
@@ -112,7 +113,12 @@ export default function Sloth({ setSelectedGame }) {
 
   useEffect(() => {
     setGameType("slot");
-  }, []); // Empty dependency array to run only once
+    if (switchWalletType === "local") {
+      setAmount(10);
+    } else {
+      setAmount(0.03);
+    }
+  }, [switchWalletType]); // Empty dependency array to run only once
 
   useEffect(() => {
     if (gameResult) {
@@ -222,7 +228,10 @@ export default function Sloth({ setSelectedGame }) {
 
         <div className="flex justify-center mt-5">
           <div className="px-3 mb-6 md:mb-5 flex flex-col justify-center items-center">
-            <label className="border-2 border-[#1cba6b] rounded pl-5 py-5 h-10 flex justify-center items-center">
+            {switchWalletType === "local" && (
+              <small className="text-white">Enter amount in dollars</small>
+            )}
+            <label className="border-2 border-[#090CA9] rounded pl-5 py-5 h-10 flex justify-center items-center">
               <input
                 className="w-[100%] bg-transparent outline-none text-[#fff] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 type="number"
@@ -232,7 +241,7 @@ export default function Sloth({ setSelectedGame }) {
               />
               <button
                 onClick={() => spin()}
-                className="w-[100px] text-[#fff] border-l-2 border-[#1cba6b] font-extrabold p-3 game-font text-sm md:text-sm cursor-pointer text-center hover:bg-[#1cba6b] hover:text-[#fff]"
+                className="w-[100px] text-[#fff] border-l-2 border-[#090CA9] font-extrabold p-3 game-font text-sm md:text-sm cursor-pointer text-center hover:bg-[#090CA9] hover:text-[#fff]"
               >
                 Spin
               </button>

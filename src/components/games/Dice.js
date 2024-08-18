@@ -4,7 +4,8 @@ import { ShopContext } from "../../utils/contextShop";
 import Draggable from "react-draggable";
 
 export default function Dice({ setSelectedGame }) {
-  const { play, loaderActive, chain } = useContext(ShopContext);
+  const { play, loaderActive, chain, switchWalletType } =
+    useContext(ShopContext);
   const [position, setPosition] = useState(120);
   const [newPosition, setNewPosition] = useState(50);
   const [winChance, setWinChance] = useState(50);
@@ -84,9 +85,13 @@ export default function Dice({ setSelectedGame }) {
 
   useEffect(() => {
     setGameType("dice");
-    setAmount(0.05);
+    if (switchWalletType === "local") {
+      setAmount(10);
+    } else {
+      setAmount(0.05);
+    }
     setMul(2.0); // Initialize mul with a valid number
-  }, []);
+  }, [switchWalletType]);
 
   return (
     <div
@@ -153,7 +158,11 @@ export default function Dice({ setSelectedGame }) {
           <div className="text-center">
             <div className="">
               {payout}
-              {!chain ? "ETH" : chain?.chain}
+              {switchWalletType === "local"
+                ? "$"
+                : !chain && switchWalletType === "live"
+                ? "ETH"
+                : chain?.chain}
             </div>
             <div className="">Payout</div>
           </div>
@@ -186,7 +195,10 @@ export default function Dice({ setSelectedGame }) {
 
         <div className="flex justify-center mt-5">
           <div className="px-3 mb-6 md:mb-5 flex flex-col justify-center items-center">
-            <label className="border-2 border-[#1cba6b] rounded pl-5 py-5 h-10 flex justify-center items-center">
+            {switchWalletType === "local" && (
+              <small className="text-white">Enter amount in dollars</small>
+            )}
+            <label className="border-2 border-[#090CA9] rounded pl-5 py-5 h-10 flex justify-center items-center">
               <input
                 className="w-[100%] bg-transparent outline-none text-[#fff] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 type="number"
@@ -196,7 +208,7 @@ export default function Dice({ setSelectedGame }) {
               />
               <div
                 onClick={roll}
-                className="w-[100px] text-[#fff] border-l-2 border-[#1cba6b] font-extrabold p-3 game-font text-sm md:text-sm cursor-pointer text-center hover:bg-[#1cba6b] hover:text-[#fff]"
+                className="w-[100px] text-[#fff] border-l-2 border-[#090CA9] font-extrabold p-3 game-font text-sm md:text-sm cursor-pointer text-center hover:bg-[#090CA9] hover:text-[#fff]"
               >
                 Roll
               </div>
