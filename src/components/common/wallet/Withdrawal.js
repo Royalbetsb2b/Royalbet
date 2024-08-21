@@ -167,7 +167,7 @@ export default function Withdrawal() {
       selectedOption.merch,
       selectedOption.value
     );
-    // console.log(response, "withdrawal");
+    console.log(response, "withdrawal");
     if (!response.status) {
       setErr(response.message);
       setLoading(false);
@@ -181,8 +181,17 @@ export default function Withdrawal() {
 
   const calculateFiat = (e) => {
     // const amountEntered = e.target.value;
-    const converted = e.target.value * chainFiatAmt;
-    if (converted > userProfile.balance) {
+    console.log(
+      typeof chainFiatAmt,
+      typeof userProfile.balance,
+      "checking its type"
+    );
+    const converted = parseFloat(e.target.value) * chainFiatAmt;
+    if (e.target.value === "") {
+      setCalcAmtInFiat(0);
+      return;
+    }
+    if (converted > parseFloat(userProfile.balance)) {
       setCalcAmtInFiat("insufficient balance");
       return;
     }
@@ -283,6 +292,10 @@ export default function Withdrawal() {
       {!loading && apiResCheck && (
         <div className="w-[100%] flex flex-col justify-center items-center">
           <div className="flex flex-col justify-start w-[100%]">
+            <div className="text-white text-xs">
+              Amount entered is for the seleted token{" "}
+              <i class="fa fa-sort-amount-asc" aria-hidden="true"></i>
+            </div>
             <div className="rounded text-white border border-[#BE36EB] flex gap-2 items-center p-2 w-[100%]">
               <input
                 type="number"
@@ -291,7 +304,7 @@ export default function Withdrawal() {
                 placeHolder="Enter Amount To Withdraw"
               />
             </div>
-            <div className="text-white text-xs">{calcAmtInFiat}</div>
+            <div className="text-white text-xs">${calcAmtInFiat}</div>
           </div>
 
           <button

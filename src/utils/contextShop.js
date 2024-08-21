@@ -358,7 +358,14 @@ export const ShopContextProvider = (props) => {
         const response = await makeCall(endpoint, body, headers, "post");
         console.log(response, "ahhh response");
         setGameResult(true);
-        if (!response.win) {
+        if (!response.status && response.message) {
+          setloaderActive(false);
+          setNotify(true);
+          setNotifyType("warn");
+          setNotifyMsg(response.message);
+          return;
+        }
+        if (!response.win && response.status) {
           setloaderActive(false);
           setConfettiLoss(true);
           setUserprofile(response.user);

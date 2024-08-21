@@ -30,13 +30,14 @@ function Layout({ children, setCurrentChain }) {
     webhookRecieved,
   } = useContext(ShopContext);
   useEffect(() => {
+    console.log(usernameModal, "in sie inside layuout");
     // if (!address) {
     //   setNotify(true);
     //   setNotifyType("warn");
     //   setNotifyMsg("Please connect your wallet to proceed");
     //   navigate("/");
     // }
-  }, [address]);
+  }, [address, webhookRecieved, gameResult, depositModal, usernameModal]);
 
   return (
     <main className="h-full min-h-screen relative bg-[#07001A]">

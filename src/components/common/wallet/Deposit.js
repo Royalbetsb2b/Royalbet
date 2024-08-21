@@ -25,81 +25,106 @@ export default function Deposit() {
     {
       img: "/wallet/btc.png",
       value: "BTC",
-      label: "BTC",
+      label: "Bitcoin",
+      qrCode: "Bitcoin",
       coinpay: "BTC",
     },
     {
       img: "/wallet/bsc.svg",
       value: "BNB",
       label: "Binance",
+      qrCode: "Binance",
       coinpay: "BNB.BSC",
     },
-    { img: "/wallet/sol.png", value: "SOL", label: "Solana", coinpay: "SOL" },
-    { img: "/wallet/usdt.png", value: "USDT", label: "USDT", coinpay: "USDT" },
+    {
+      img: "/wallet/sol.png",
+      value: "SOL",
+      label: "Solana",
+      qrCode: "Solana",
+      coinpay: "SOL",
+    },
+    {
+      img: "/wallet/usdt.png",
+      value: "USDT",
+      label: "USDT",
+      qrCode: "USDT",
+      coinpay: "USDT",
+    },
     {
       img: "/wallet/usdt.png",
       value: "USDT",
       label: "USDT(BSC)",
+      qrCode: "Binance",
       coinpay: "USDT.BEP20",
     },
     {
       img: "/wallet/usdt.png",
       value: "USDT",
       label: "USDT(ERC)",
+      qrCode: "Ethereum",
       coinpay: "USDT.ERC20",
     },
     {
       img: "/wallet/usdt.png",
       value: "USDT",
       label: "USDT(Polygon)",
+      qrCode: "Polygon",
       coinpay: "USDT.PRC20",
     },
     {
       img: "/wallet/usdt.png",
       value: "USDT",
       label: "USDT(Solana)",
+      qrCode: "Solana",
       coinpay: "USDT.SOL",
     },
     {
       img: "/wallet/usdc.png",
       value: "USDC",
       label: "USDC(Solana)",
+      qrCode: "Solana",
       coinpay: "USDC.SOL",
     },
     {
       img: "/wallet/usdc.png",
       value: "USDC",
       label: "USDC(BSC)",
+      qrCode: "Binance",
       coinpay: "USDC.BEP20",
     },
     {
       img: "/wallet/usdc.png",
       value: "USDC",
       label: "USDC(ETH)",
+      qrCode: "Ethereum",
       coinpay: "USDC",
     },
     {
       img: "/wallet/polygon.svg",
       value: "MATIC",
       label: "MATIC",
+      qrCode: "Polygon",
       coinpay: "MATIC.POLY",
     },
     {
       img: "/wallet/ltc.png",
       value: "LTC",
       label: "LTC",
+      qrCode: "Litecoin",
       coinpay: "LTC",
     },
     {
       img: "/wallet/trx.png",
       value: "TRX",
       label: "TRX",
+      qrCode: "Tron",
       coinpay: "TRX",
     },
     {
       img: "/wallet/doge.png",
       value: "DOGE",
       label: "DOGE",
+      qrCode: "Doge",
       coinpay: "DOGE",
     },
   ];
@@ -144,6 +169,27 @@ export default function Deposit() {
       case "binance":
         uri = `binance:${address}?amount=${amount}`;
         break;
+      case "polygon":
+        uri = `matic:${address}?amount=${amount}`;
+        break;
+      case "litecoin":
+        uri = `litecoin:${address}?amount=${amount}`;
+        break;
+      case "tron":
+        uri = `tron:${address}?amount=${amount}`;
+        break;
+      case "doge":
+        uri = `dogecoin:${address}?amount=${amount}`;
+        break;
+      case "usdc.sol":
+        uri = `solana:${address}?amount=${amount}`;
+        break;
+      case "usdc.bsc":
+        uri = `binance:${address}?amount=${amount}`;
+        break;
+      case "usdc.eth":
+        uri = `ethereum:${address}?value=${amount}`;
+        break;
       default:
         throw new Error("Unsupported chain");
     }
@@ -169,13 +215,21 @@ export default function Deposit() {
       selectedOption.coinpay
     );
     console.log(response, "in deposit");
-    setResponseDepositTo(response);
-    let chain = options.find((one) => one.value === response.type).value;
-    setCatchAddress(response.address);
-    setWehookCalled(true);
-    const qrURL = await generateQRCode(chain, response.address, 10);
-    setQRCodeURL(qrURL);
-    setLoading(false);
+    if (response.status && response.address !== "") {
+      console.log("ran in in here two");
+      setResponseDepositTo(response);
+      // let chain = options.find((one) => one.value === response.type).value;
+      setCatchAddress(response.address);
+      setWehookCalled(true);
+      const qrURL = await generateQRCode(
+        selectedOption.label,
+        response.address,
+        10
+      );
+      console.log(qrURL, "checking the url gotten");
+      setQRCodeURL(qrURL);
+      setLoading(false);
+    }
   };
 
   return (

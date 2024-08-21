@@ -26,6 +26,7 @@ function Navbar({ setCurrentChain }) {
   //check if address is correct
   const checkUserRegistered = async () => {
     try {
+      console.log("eye, i, ey, jjjdk");
       // setLoading(true);
       const endpoint = `${LOCAL_URL}/check_user/${address}`;
       // const token = await localStorage.getItem("token");
@@ -34,7 +35,9 @@ function Navbar({ setCurrentChain }) {
         "Content-Type": "application/json",
       };
       const response = await makeCall(endpoint, {}, headers, "get");
+      console.log(response, "checkig the response from the backend");
       if (!response.data) {
+        console.log("in in here musa");
         //call modal to input username and create account
         setusernameModal(true);
         return;
@@ -58,6 +61,7 @@ function Navbar({ setCurrentChain }) {
 
   useEffect(() => {
     if (switchWalletType === "local" && address) {
+      console.log("eye, i, ey, ai");
       checkUserRegistered();
     }
   }, [switchWalletType, isRegistered]);
