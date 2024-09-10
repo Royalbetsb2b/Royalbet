@@ -4,95 +4,130 @@ import ShowRecent from "./ShowRecent";
 import { useNavigate } from "react-router-dom";
 import { ShopContext } from "../../utils/contextShop";
 import { useAddress } from "@thirdweb-dev/react";
+import { formatDate, LOCAL_URL } from "../../utils/constants";
+import { makeCall } from "../../utils/makeCall";
+import { shortenAddress } from "../../utils/trauncate";
 
 function AllFlips() {
-  const address = useAddress();
-  const [userData, setUserdata] = useState();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
-  const { dataUsers, notify, dataHistory } =
-    useContext(ShopContext);
+  const getRecents = async () => {
+    try {
+      const endpoint = `${LOCAL_URL}/recent_plays`;
+      const headers = {
+        "Content-Type": "application/json", // You may include this header if required by the API
+      };
+      const response = await makeCall(endpoint, {}, headers, "get");
+      // console.log(response, "inside transaction");
+      if (response.status) {
+        // Process the response data as needed
+        setData(response.data);
+        setLoading(false);
+        // setPagination(response.pagination);
+      }
+    } catch (error) {
+      // setNotify(true);
+      // setNotifyType("error");
+      // setNotifymsg(error);
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    console.log(dataHistory, "checking from all flips component");
-    if (dataHistory) {
-      setUserdata(Array.from(dataHistory).reverse());
+    if (loading) {
+      getRecents();
     }
-  }, [address, dataHistory, notify]);
+  }, [data]);
 
   return (
     <div className="w-100 h-[100dvh] flex justify-center items-center">
-      {dataHistory?.length !== 0 && address ? (
-        <div className="flex justify-center items-center flex-col mt-9 px-4 md:px-16">
-          <div className=" p-5 flex items-center  justify-center rounded-md w-full text-white h-28">
-            <h1 className="text-[#fff] game-font text-[25px] font-bold text-center ">
-              Recent Flips
-            </h1>
-          </div>
-          <div className="h-[50dvh] w-[100%] md:w-[70%] bg-[#130D25] border-2 border-[#FFF] rounded mb-10">
-            {dataHistory?.map((data) => (
-              <ShowRecent data={data} address={address} />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="text-[#FFF] text-center font-bold rounded-lg w-[300px] h-[374px] bg-[#130D25] flex flex-col justify-center items-center">
-          <svg
-            width="82"
-            height="90"
-            viewBox="0 0 82 90"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M29.119 60.3069C29.04 60.8599 29 61.4249 29 61.9999C29 68.6269 34.373 73.9999 41 73.9999C47.627 73.9999 53 68.6269 53 61.9999C53 61.4249 52.96 60.8599 52.881 60.3069H82V86.9999C82 88.6569 80.657 89.9999 79 89.9999H3C1.3431 89.9999 0 88.6569 0 86.9999V60.3069H29.119Z"
-              fill="black"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M54 60C54 67.18 48.18 73 41 73C33.82 73 28 67.18 28 60C28 59.767 28.006 59.536 28.018 59.307H0L9.5604 31.0389C9.9726 29.8202 11.1159 29 12.4023 29H69.598C70.884 29 72.027 29.8202 72.44 31.0389L82 59.307H53.982C53.994 59.536 54 59.767 54 60Z"
-              fill="black"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M52.098 60.955C52.098 66.502 47.129 72 41 72C34.871 72 29.902 66.502 29.902 60.955C29.902 60.775 29.908 59.596 29.918 59.419H9L17.161 39.5755C17.513 38.6338 18.489 38 19.587 38H62.413C63.511 38 64.487 38.6338 64.839 39.5755L73 59.419H52.082C52.092 59.596 52.098 60.775 52.098 60.955Z"
-              fill="black"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M1.25 59.512V86C1.25 86.966 2.0335 87.75 3 87.75H79C79.966 87.75 80.75 86.966 80.75 86V59.512L71.255 31.4393C71.015 30.7285 70.348 30.25 69.598 30.25H12.4023C11.6519 30.25 10.985 30.7285 10.7446 31.4393L1.25 59.512Z"
-              fill="black"
-              stroke="#1cba6b"
-              stroke-width="2.5"
-            />
-            <path
-              d="M14 59C17.937 59 22.185 59 26.745 59C28.621 59 28.621 60.319 28.621 61C28.621 67.627 34.117 73 40.897 73C47.677 73 53.173 67.627 53.173 61C53.173 60.319 53.173 59 55.05 59H80"
-              fill="black"
-            />
-            <path
-              d="M14 59C17.937 59 22.185 59 26.745 59C28.621 59 28.621 60.319 28.621 61C28.621 67.627 34.117 73 40.897 73C47.677 73 53.173 67.627 53.173 61C53.173 60.319 53.173 59 55.05 59H80M6.57373 59H9.00003"
-              stroke="#1cba6b"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path d="M66.1 6.3027L55 18.7559Z" fill="black" />
-            <path
-              d="M66.1 6.3027L55 18.7559M40.1 2V18.7559M14 6.3027L25.1 18.7559"
-              stroke="#1cba6b"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+      <div className="relative w-full flex justify-center">
+        <div className="m-5 border rounded-2xl overflow-hidden bg-[#130D25] w-[83%] md:w-[62%] lg:w-[55%]">
+          {data?.length !== 0 ? (
+            <div className="overflow-x-auto sm:rounded-lg">
+              <table className="w-full text-sm text-gray-500 hidden md:block">
+                <thead>
+                  <tr className="text-xs uppercase bg-gray-50">
+                    <th className="py-3 px-6 w-1/6">Time</th>
+                    <th className="py-3 px-6 w-1/6">Game</th>
+                    <th className="py-3 px-6 w-1/6">User</th>
+                    <th className="py-3 px-6 w-1/6">Bet</th>
+                    {/* <th className="py-3 px-6 w-1/6">Won</th> */}
+                    <th className="py-3 px-6 w-1/6">Payout</th>
+                  </tr>
+                </thead>
 
-          <div className="mt-5 text-[#808792]">No history</div>
+                <tbody>
+                  {data?.map((item) => (
+                    <tr key={item.id} className="bg-[#2A253A] hover:bg-[#333]">
+                      <td className="py-4 px-6 w-1/6 text-center whitespace-nowrap">
+                        {formatDate(item.createdAt)}
+                      </td>
+                      <td className="py-4 px-6 w-1/6 text-center">
+                        {item.type}
+                      </td>
+                      <td className="py-4 px-6 w-1/6 text-center">
+                        {shortenAddress(item.player)}
+                      </td>
+                      <td className="py-4 px-6 w-1/6 text-center">
+                        {item.amount_played}
+                      </td>
+                      {/* <td className="py-4 px-6 w-1/6 text-center">
+                      samp
+                    </td> */}
+                      <td className="py-4 px-6 w-1/6 text-center">
+                        {item.payout}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {/* mobile view table */}
+              <div className="block md:hidden">
+                <div className="flex w-[100%] justify-between px-5 pt-3 text-[#fff] font-semibold border-b border-[#fff]">
+                  <div className="">User/date</div>
+                  <div className="">Game/Payout</div>
+                </div>
+                {data?.map((item, idx) => (
+                  <div
+                    className="justify-between  items-center w-full py-3  flex border-b border-[#fff]"
+                    key={idx}
+                  >
+                    <div className="flex justify-between items-center w-[100%] px-5">
+                      <div className="flex flex-col text-[#fff]">
+                        <div className="p-2">{shortenAddress(item.player)}</div>
+                        <div className="font-meduim  ml-2 text-xs ">
+                          {formatDate(item.createdAt)}
+                        </div>
+                      </div>
+                      <div className="text-[#fff] ">
+                        <div className="font-semibold text-xs ml-2 text-[#fff]">
+                          {item.type}
+                        </div>
+                        <div className="text-[#fff] text-xs ml-2 font-bold">
+                          {item.payout}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : data.length === 0 && loading ? (
+            <div className="font-bold text-2xl text-center px-10 py-10 text-white">
+              Loading....
+            </div>
+          ) : (
+            <div className="flex justify-center flex-col mt-20 items-center ">
+              <img src="./no-transaction.png" className="w-28 h-28" alt="" />
+              <p className="font-semibold text-xs text-black">
+                You have no transactions
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

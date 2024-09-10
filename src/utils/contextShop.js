@@ -27,7 +27,7 @@ export const ShopContextProvider = (props) => {
   const chain = useChain();
   const chainIdd = useChainId();
 
-  // console.log(chain, chainIdd, "checking chain out");
+  // console.log(chain, "checking chain out context");
 
   /* global BigInt */
 
@@ -109,6 +109,27 @@ export const ShopContextProvider = (props) => {
   ) => {
     try {
       setLoading(true);
+
+      let data = 0;
+      if (chain !== "wallet") {
+        // console.log(chain, "checking other things");
+
+        const apiUrl = `https://min-api.cryptocompare.com/data/price?fsym=${
+          chain === "BSC" ? "BNB" : chain
+        }&tsyms=USD`;
+        const headersProce = {
+          "Content-Type": "application/json",
+        };
+        const responsePrice = await makeCall(apiUrl, {}, headersProce, "get");
+
+        // console.log(responsePrice, "itchy in a bittsy");
+        if (responsePrice.Response === "Error") {
+          throw new Error(responsePrice.Message);
+        }
+
+        data = responsePrice.USD;
+      }
+
       const endpoint = `${LOCAL_URL}/game_played`;
       const headers = {
         // Authorization: `Bearer ${token}`,
@@ -123,9 +144,45 @@ export const ShopContextProvider = (props) => {
         player: player,
         referral: referral,
         chain: chain,
+        token_price_convt: data,
         duplicate_id: requestId,
       };
       await makeCall(endpoint, body, headers, "post");
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "catch error");
+    }
+  };
+
+  //call to store recent
+  const gameRecent = async (
+    type,
+    is_win,
+    amount_played,
+    payout,
+    player,
+    requestId,
+    chain
+  ) => {
+    try {
+      setLoading(true);
+      const endpoint = `${LOCAL_URL}/game_recent`;
+      const headers = {
+        // Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const body = {
+        type: type,
+        is_win: is_win,
+        wallet: chain === "wallet" ? "local" : "live",
+        amount_played: amount_played,
+        payout: payout,
+        player: player,
+        chain: chain,
+        duplicate_id: requestId,
+      };
+      const response = await makeCall(endpoint, body, headers, "post");
+      // console.log(response, "check check check something");
     } catch (error) {
       setLoading(false);
       console.log(error, "catch error");
@@ -166,7 +223,7 @@ export const ShopContextProvider = (props) => {
       const responsePrice = await makeCall(apiUrl, {}, headersProce, "get");
 
       if (responsePrice.Response === "Error") {
-        throw new Error(response.Message);
+        throw new Error(responsePrice.Message);
       }
 
       const data = responsePrice.USD;
@@ -244,7 +301,6 @@ export const ShopContextProvider = (props) => {
           isWin,
           requestId,
           referral,
-          chain,
         } = log[0].data;
 
         setloaderActive(false);
@@ -261,20 +317,27 @@ export const ShopContextProvider = (props) => {
           player,
           convertRequestId,
           referral,
-          chain
+          chain.chain
         );
       } else {
         setloaderActive(false);
         setConfettiLoss(true);
       }
+
+      const { gameType, player, amountPlayed, payout, isWin, requestId } =
+        log[0].data;
+
+      await gameRecent(
+        gameType,
+        isWin,
+        amountPlayed,
+        payout,
+        player,
+        requestId,
+        "metamask"
+      );
     }
   };
-
-  // const {
-  //   data: log,
-  //   isLoading: loadingEvent,
-  //   error: errorEvent,
-  // } = useContractEvents(contract, "BetResolved");
 
   const play = async (
     gametype,
@@ -300,6 +363,13 @@ export const ShopContextProvider = (props) => {
         PLATFORM_CREATOR_ADDRESS !== ""
           ? PLATFORM_CREATOR_ADDRESS
           : "0x0000000000000000000000000000000000000000";
+      //for storing recent games
+      let winRecent = false;
+      let duplicateRecent;
+      let gameTypeRecent;
+      let playerRecent;
+      let AmountRecent;
+      let payoutRecent;
       if (switchWalletType === "live") {
         setloaderActive(true);
 
@@ -356,7 +426,6 @@ export const ShopContextProvider = (props) => {
           feeReceiver: recieverValue,
         };
         const response = await makeCall(endpoint, body, headers, "post");
-        console.log(response, "ahhh response");
         setGameResult(true);
         if (!response.status && response.message) {
           setloaderActive(false);
@@ -375,6 +444,12 @@ export const ShopContextProvider = (props) => {
         setConfettiWin(true);
         setUserprofile(response.user);
         const duplicateId = generateRandomId(); // Generate a unique ID for the duplicated id
+        winRecent = true;
+        duplicateRecent = duplicateId;
+        gameTypeRecent = gametype;
+        playerRecent = userProfile.username;
+        AmountRecent = amount;
+        payoutRecent = payout;
         await gamePlayed(
           gametype,
           response.win,
@@ -385,8 +460,17 @@ export const ShopContextProvider = (props) => {
           refValue,
           "wallet"
         );
-        return;
       }
+
+      await gameRecent(
+        gameTypeRecent,
+        winRecent,
+        AmountRecent,
+        payoutRecent,
+        playerRecent,
+        duplicateRecent,
+        "wallet"
+      );
     } catch (error) {
       console.log(error, "error ini");
       setloaderActive(false);

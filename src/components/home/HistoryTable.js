@@ -29,7 +29,7 @@ function HistoryTable() {
 
   const getTransactions = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/recent_plays`;
+      const endpoint = `${LOCAL_URL}/recent_plays_win`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };
