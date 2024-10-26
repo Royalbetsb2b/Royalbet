@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useChain, useChainId, useSwitchChain } from "@thirdweb-dev/react";
+
 import { ShopContext } from "../../../utils/contextShop";
 
 const Supported = ({ setCurrentChain }) => {
@@ -123,18 +124,18 @@ const Supported = ({ setCurrentChain }) => {
       {/* Custom Dropdown */}
       <div className="relative text-[13px]">
         <div
-          className="text-[#fff] p-2 bg-[#07001A] border border-[#090CA9] rounded-md cursor-pointer whitespace-nowrap"
+          className="z-[99999] text-[#fff] p-[0.8rem] bg-[#07001A] border -ml-2 border-[#090CA9] rounded-r-md cursor-pointer whitespace-nowrap"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <div className="flex justify-center gap-2 bg-[#07001A]">
             <div className="hidden md:block">
               {selectedChain || "Choose currency"}
             </div>
-            <div className="w-5 h-5 flex-shrink-0">
+            <div className="flex-shrink-0 w-5 h-5">
               <img
                 src={selectedChainImg}
                 alt=""
-                className="w-full h-full object-contain rounded-full"
+                className="object-contain w-full h-full rounded-full"
               />
             </div>
           </div>
@@ -143,16 +144,16 @@ const Supported = ({ setCurrentChain }) => {
           <div className="absolute mt-2 p-2 md:p-4 bg-[#130D25] border border-[#090CA9] rounded-md z-[99999]">
             {chains.map((chain) => (
               <div
-                className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-colors duration-200"
+                className="flex items-center gap-2 p-2 transition-colors duration-200 rounded-md cursor-pointer hover:bg-gray-700"
                 key={chain.value}
                 onClick={() => handleChainChange(chain)}
               >
-                <div className="text-white flex-grow ">{chain.label}</div>
-                <div className="w-5 h-5 flex-shrink-0">
+                <div className="flex-grow text-white ">{chain.label}</div>
+                <div className="flex-shrink-0 w-5 h-5">
                   <img
                     src={chain.img}
                     alt={`${chain.label} logo`}
-                    className="w-full h-full object-contain rounded-full"
+                    className="object-contain w-full h-full rounded-full"
                   />
                 </div>
               </div>

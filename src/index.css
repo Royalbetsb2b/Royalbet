@@ -492,6 +492,7 @@ code {
 
 /* button nav */
 .button_nav {
+  z-index: 500 !important;
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
   padding-left: 1.25rem !important;
