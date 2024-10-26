@@ -105,17 +105,25 @@ function Navbar({ setCurrentChain }) {
           )}
 
           {address && (
-            <div className="  max-w-[50px] flex flex-col items-center ml-2">
-              <span className="text-xs font-light text-white">{switchWalletType}</span>
-              <label className="switch  max-w-[50px]">
+            <div className="flex flex-col items-center max-w-[50px] ml-2">
+              <span className="text-xs font-light text-white">
+                {switchWalletType === "live" ? "on-chain" : switchWalletType === "local" ? "balance" : switchWalletType}
+              </span>
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isChecked}
                   onChange={handleToggle}
-                  className="toggle  max-w-[50px]"
+                  className="sr-only peer"
                 />
-                <span className="slider"></span>
-                <span className="card-side"></span>
+                <div className="w-12 h-7 bg-gray-700 peer-focus:outline-none rounded-lg peer 
+                    peer-checked:after:translate-x-full peer-checked:after:border-white 
+                    after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
+                    after:bg-white after:border-gray-300 after:border after:rounded-lg 
+                    after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600
+                    border border-gray-600 peer-checked:border-blue-500
+                    after:shadow-md hover:after:shadow-white/25">
+                </div>
               </label>
             </div>
           )}
