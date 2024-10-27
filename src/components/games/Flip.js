@@ -30,7 +30,7 @@ function Flip({ setSelectedGame }) {
   const [payout, setPayout] = useState(0);
 
   const handleChoice = (event) => {
-    console.log("lets seee", event.target.value);
+    // console.log("lets seee", event.target.value);
     setSelectedMode(event.target.value);
     setSelectedChoice(event.target.value === "heads" ? 1 : 0);
   };
@@ -40,12 +40,12 @@ function Flip({ setSelectedGame }) {
     setAmount(event.target.value);
     setPayout(event.target.value * 2);
     setRange(2);
-    console.log(
-      event.target.value,
-      typeof payout,
-      event.target.value * 2,
-      "her inside ooooo"
-    );
+    // console.log(
+    //   event.target.value,
+    //   typeof payout,
+    //   event.target.value * 2,
+    //   "her inside ooooo"
+    // );
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ function Flip({ setSelectedGame }) {
     }
 
     setGameType("flip");
-    console.log(payout, "her inside ooooo two");
+    // console.log(payout, "her inside ooooo two");
   }, [playingas, payout, switchWalletType]);
 
   return (
@@ -175,14 +175,7 @@ function Flip({ setSelectedGame }) {
               <span
                 className="checkmark w-[17rem]  border-2 border-[#fff] w-100  font-extrabold p-3 game-font text-sm md:text-sm"
                 onClick={() =>
-                  play(
-                    gametype,
-                    selectedChoice,
-                    amount,
-                    range,
-                    payout,
-                    searchParams
-                  )
+                  play(gametype, selectedChoice, amount, range, searchParams)
                 }
               >
                 Flip

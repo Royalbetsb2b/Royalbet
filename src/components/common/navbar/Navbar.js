@@ -28,7 +28,7 @@ function Navbar({ setCurrentChain }) {
     try {
       console.log("eye, i, ey, jjjdk");
       // setLoading(true);
-      const endpoint = `${LOCAL_URL}/check_user/${address}`;
+      const endpoint = `${LOCAL_URL}/info/check_user/${address}`;
       // const token = await localStorage.getItem("token");
       const headers = {
         // Authorization: `Bearer ${token}`,
@@ -162,7 +162,7 @@ function Navbar({ setCurrentChain }) {
         {address && (
           <div className="w-auto relative navside flex flex-col">
             <div className="text-[12px] text-[#FFF] font-light text-center">
-              {switchWalletType}
+              {switchWalletType === "live" ? "ONCHAIN" : "BALANCE"}
             </div>
 
             <label className="switch">

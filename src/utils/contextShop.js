@@ -109,6 +109,7 @@ export const ShopContextProvider = (props) => {
   ) => {
     try {
       setLoading(true);
+      console.log("called this nigga right here");
 
       let data = 0;
       if (chain !== "wallet") {
@@ -130,9 +131,10 @@ export const ShopContextProvider = (props) => {
         data = responsePrice.USD;
       }
 
-      const endpoint = `${LOCAL_URL}/game_played`;
+      const endpoint = `${LOCAL_URL}/info/game_played`;
+      const token = await localStorage.getItem("token");
       const headers = {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
       const body = {
@@ -154,45 +156,10 @@ export const ShopContextProvider = (props) => {
     }
   };
 
-  //call to store recent
-  const gameRecent = async (
-    type,
-    is_win,
-    amount_played,
-    payout,
-    player,
-    requestId,
-    chain
-  ) => {
-    try {
-      setLoading(true);
-      const endpoint = `${LOCAL_URL}/game_recent`;
-      const headers = {
-        // Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-      const body = {
-        type: type,
-        is_win: is_win,
-        wallet: chain === "wallet" ? "local" : "live",
-        amount_played: amount_played,
-        payout: payout,
-        player: player,
-        chain: chain,
-        duplicate_id: requestId,
-      };
-      const response = await makeCall(endpoint, body, headers, "post");
-      // console.log(response, "check check check something");
-    } catch (error) {
-      setLoading(false);
-      console.log(error, "catch error");
-    }
-  };
-
   const loginWallet = async (addresssub, username) => {
     try {
       // setLoading(true);
-      const endpoint = `${LOCAL_URL}/account_signin_signup`;
+      const endpoint = `${LOCAL_URL}/auth/account_signin_signup`;
       const headers = {
         // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -228,7 +195,7 @@ export const ShopContextProvider = (props) => {
 
       const data = responsePrice.USD;
 
-      const endpoint = `${LOCAL_URL}/deposit`;
+      const endpoint = `${LOCAL_URL}/wallet/deposit`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -249,7 +216,7 @@ export const ShopContextProvider = (props) => {
   const withdrawalInWallet = async (asset, address, amount, convert_price) => {
     try {
       setLoading(true);
-      const endpoint = `${LOCAL_URL}/withdraw`;
+      const endpoint = `${LOCAL_URL}/wallet/withdraw`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -273,7 +240,7 @@ export const ShopContextProvider = (props) => {
   const checkAddressCorrect = async (address_check, chain, asset) => {
     try {
       setLoading(true);
-      const endpoint = `${LOCAL_URL}/verify_address/${address_check}/${chain}/${asset}`;
+      const endpoint = `${LOCAL_URL}/info/verify_address/${address_check}/${chain}/${asset}`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -292,50 +259,42 @@ export const ShopContextProvider = (props) => {
     if (expecter === `${log[0]?.data?.eventid}`) {
       localStorage.setItem(`Expectingresult`, "");
       setGameResult(true);
-      if (log[0].data.isWin === true) {
-        const {
-          gameType,
-          player,
-          amountPlayed,
-          payout,
-          isWin,
-          requestId,
-          referral,
-        } = log[0].data;
 
+      const {
+        gameType,
+        player,
+        payout,
+        amountPlayed,
+        isWin,
+        requestId,
+        referral,
+      } = log[0].data;
+
+      const convertAmountPlayed = ethers.utils.formatEther(amountPlayed);
+      const convertPayout = ethers.utils.formatEther(payout);
+      const convertRequestId = parseFloat(requestId?.toString());
+
+      if (log[0].data.isWin === true) {
         setloaderActive(false);
         setConfettiWin(true);
-        const convertAmountPlayed = ethers.utils.formatEther(amountPlayed);
-        const convertPayout = ethers.utils.formatEther(payout);
-        const convertRequestId = parseFloat(requestId?.toString());
-
-        await gamePlayed(
-          gameType,
-          isWin,
-          convertAmountPlayed,
-          convertPayout,
-          player,
-          convertRequestId,
-          referral,
-          chain.chain
-        );
       } else {
         setloaderActive(false);
         setConfettiLoss(true);
       }
 
-      const { gameType, player, amountPlayed, payout, isWin, requestId } =
-        log[0].data;
-
-      await gameRecent(
+      await gamePlayed(
         gameType,
         isWin,
-        amountPlayed,
-        payout,
+        convertAmountPlayed,
+        convertPayout,
         player,
-        requestId,
-        "metamask"
+        convertRequestId,
+        referral,
+        chain.chain
       );
+
+      // const { gameType, player, amountPlayed, payout, isWin, requestId } =
+      //   log[0].data;
     }
   };
 
@@ -344,7 +303,6 @@ export const ShopContextProvider = (props) => {
     selectedChoice,
     amount,
     range,
-    payout,
     searchParams
   ) => {
     // console.log(ContractAddress, ", joooooe");
@@ -378,7 +336,7 @@ export const ShopContextProvider = (props) => {
           String(selectedChoice),
           18
         );
-        const payoutAsBigNumber = parseUnits(String(payout), 18);
+        // const payoutAsBigNumber = parseUnits(String(payout), 18);
         const eventId = generateRandomId(); // Generate a unique ID for the event
         localStorage.setItem(`Expectingresult`, `${eventId}`);
         // Math.round(selectedChoice),
@@ -387,7 +345,7 @@ export const ShopContextProvider = (props) => {
             gametype,
             selectedChoiceAsBigNumber,
             // rangeAsBigNumber,
-            payoutAsBigNumber,
+            // payoutAsBigNumber,
             refValue,
             eventId,
             recieverValue,
@@ -411,7 +369,7 @@ export const ShopContextProvider = (props) => {
           return;
         }
 
-        const endpoint = `${LOCAL_URL}/place_bet`;
+        const endpoint = `${LOCAL_URL}/bet/place_bet`;
         const token = await localStorage.getItem("token");
         const headers = {
           Authorization: `Bearer ${token}`,
@@ -420,13 +378,29 @@ export const ShopContextProvider = (props) => {
         const body = {
           gameType: gametype,
           selection: selectedChoice,
-          payout: payout,
+          // payout: payout,
           referral: refValue,
           betAmount: amount,
           feeReceiver: recieverValue,
         };
+
         const response = await makeCall(endpoint, body, headers, "post");
         setGameResult(true);
+
+        const duplicateId = generateRandomId(); // Generate a unique ID for the duplicated id
+
+        // payoutRecent = payout;
+        await gamePlayed(
+          gametype,
+          response.win,
+          amount,
+          response.payout,
+          userProfile.username,
+          duplicateId,
+          refValue,
+          "wallet"
+        );
+
         if (!response.status && response.message) {
           setloaderActive(false);
           setNotify(true);
@@ -443,34 +417,7 @@ export const ShopContextProvider = (props) => {
         setloaderActive(false);
         setConfettiWin(true);
         setUserprofile(response.user);
-        const duplicateId = generateRandomId(); // Generate a unique ID for the duplicated id
-        winRecent = true;
-        duplicateRecent = duplicateId;
-        gameTypeRecent = gametype;
-        playerRecent = userProfile.username;
-        AmountRecent = amount;
-        payoutRecent = payout;
-        await gamePlayed(
-          gametype,
-          response.win,
-          amount,
-          payout,
-          userProfile.username,
-          duplicateId,
-          refValue,
-          "wallet"
-        );
       }
-
-      await gameRecent(
-        gameTypeRecent,
-        winRecent,
-        AmountRecent,
-        payoutRecent,
-        playerRecent,
-        duplicateRecent,
-        "wallet"
-      );
     } catch (error) {
       console.log(error, "error ini");
       setloaderActive(false);

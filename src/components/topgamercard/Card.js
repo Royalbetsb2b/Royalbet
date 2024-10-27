@@ -1,6 +1,6 @@
 import React from "react";
 
-function Card({ walletId, totalEth, totalWon, positionNumber, positionAph }) {
+function Card({ walletId, totalEth, totalToWin, positionNumber, positionAph }) {
   return (
     <div className="border-2 border-[#090ca9] to-[#0F0F0F] from-[#130D25] bg-gradient-to-r  p-5 flex items-center relative justify-between rounded-md  md:w-full text-white h-28">
       <div className="absolute -bottom-2 bg-[#2469b7] game-font border px-3 -right-2 py-1">
@@ -32,7 +32,7 @@ function Card({ walletId, totalEth, totalWon, positionNumber, positionAph }) {
         <div className="flex flex-col md:w-44 w-24 items-center">
           <h2 className="game-font text-[8px]">Price</h2>
           <b>
-            {"$"} {totalWon}
+            {"$"} {totalToWin}
           </b>
         </div>
       </div>

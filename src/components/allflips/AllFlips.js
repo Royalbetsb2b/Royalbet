@@ -14,7 +14,7 @@ function AllFlips() {
 
   const getRecents = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/recent_plays`;
+      const endpoint = `${LOCAL_URL}/info/recent_plays`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };
@@ -41,19 +41,19 @@ function AllFlips() {
   }, [data]);
 
   return (
-    <div className="w-100 h-[100dvh] flex justify-center items-center">
-      <div className="relative w-full flex justify-center">
-        <div className="m-5 border rounded-2xl overflow-hidden bg-[#130D25] w-[83%] md:w-[62%] lg:w-[55%]">
+    <div className="w-100 h-[100dvh] flex justify-center items-start">
+      <div className="relative w-full flex justify-center mt-12">
+        <div className="m-5 border rounded-2xl overflow-y-auto bg-[#130D25] w-[83%] h-96">
           {data?.length !== 0 ? (
-            <div className="overflow-x-auto sm:rounded-lg">
-              <table className="w-full text-sm text-gray-500 hidden md:block">
+            <div className="sm:rounded-lg h-auto">
+              <table className="w-full text-sm text-gray-500 table-auto">
                 <thead>
                   <tr className="text-xs uppercase bg-gray-50">
                     <th className="py-3 px-6 w-1/6">Time</th>
                     <th className="py-3 px-6 w-1/6">Game</th>
                     <th className="py-3 px-6 w-1/6">User</th>
                     <th className="py-3 px-6 w-1/6">Bet</th>
-                    {/* <th className="py-3 px-6 w-1/6">Won</th> */}
+                    <th className="py-3 px-6 w-1/6">Status</th>
                     <th className="py-3 px-6 w-1/6">Payout</th>
                   </tr>
                 </thead>
@@ -73,9 +73,9 @@ function AllFlips() {
                       <td className="py-4 px-6 w-1/6 text-center">
                         {item.amount_played}
                       </td>
-                      {/* <td className="py-4 px-6 w-1/6 text-center">
-                      samp
-                    </td> */}
+                      <td className="py-4 px-6 w-1/6 text-center">
+                        {item.is_Win ? "Won" : "Loss"}
+                      </td>
                       <td className="py-4 px-6 w-1/6 text-center">
                         {item.payout}
                       </td>
@@ -83,36 +83,6 @@ function AllFlips() {
                   ))}
                 </tbody>
               </table>
-              {/* mobile view table */}
-              <div className="block md:hidden">
-                <div className="flex w-[100%] justify-between px-5 pt-3 text-[#fff] font-semibold border-b border-[#fff]">
-                  <div className="">User/date</div>
-                  <div className="">Game/Payout</div>
-                </div>
-                {data?.map((item, idx) => (
-                  <div
-                    className="justify-between  items-center w-full py-3  flex border-b border-[#fff]"
-                    key={idx}
-                  >
-                    <div className="flex justify-between items-center w-[100%] px-5">
-                      <div className="flex flex-col text-[#fff]">
-                        <div className="p-2">{shortenAddress(item.player)}</div>
-                        <div className="font-meduim  ml-2 text-xs ">
-                          {formatDate(item.createdAt)}
-                        </div>
-                      </div>
-                      <div className="text-[#fff] ">
-                        <div className="font-semibold text-xs ml-2 text-[#fff]">
-                          {item.type}
-                        </div>
-                        <div className="text-[#fff] text-xs ml-2 font-bold">
-                          {item.payout}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           ) : data.length === 0 && loading ? (
             <div className="font-bold text-2xl text-center px-10 py-10 text-white">

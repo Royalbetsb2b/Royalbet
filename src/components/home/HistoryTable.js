@@ -29,7 +29,7 @@ function HistoryTable() {
 
   const getTransactions = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/recent_plays_win`;
+      const endpoint = `${LOCAL_URL}/info/recent_plays_win`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };
@@ -67,7 +67,7 @@ function HistoryTable() {
                   <th className="py-3 px-6 w-1/6">Game</th>
                   <th className="py-3 px-6 w-1/6">User</th>
                   <th className="py-3 px-6 w-1/6">Bet</th>
-                  {/* <th className="py-3 px-6 w-1/6">Won</th> */}
+                  <th className="py-3 px-6 w-1/6">Status</th>
                   <th className="py-3 px-6 w-1/6">Payout</th>
                 </tr>
               </thead>
@@ -85,9 +85,9 @@ function HistoryTable() {
                     <td className="py-4 px-6 w-1/6 text-center">
                       {item.amount_played}
                     </td>
-                    {/* <td className="py-4 px-6 w-1/6 text-center">
-                      samp
-                    </td> */}
+                    <td className="py-4 px-6 w-1/6 text-center">
+                      {item.is_Win ? "Won" : "Loss"}
+                    </td>
                     <td className="py-4 px-6 w-1/6 text-center">
                       {item.payout}
                     </td>

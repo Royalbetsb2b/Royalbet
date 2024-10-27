@@ -36,7 +36,7 @@ export default function Usernamemodal() {
       }
       console.log(e.target.value, "showing responses");
       //   setLoading(true);
-      const endpoint = `${LOCAL_URL}/check_username/${e.target.value}`;
+      const endpoint = `${LOCAL_URL}/info/check_username/${e.target.value}`;
       console.log(endpoint, "showing responses two again");
 
       const headers = {
