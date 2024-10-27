@@ -492,6 +492,7 @@ code {
 
 /* button nav */
 .button_nav {
+  z-index: 500 !important;
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
   padding-left: 1.25rem !important;
@@ -604,4 +605,18 @@ code {
 
 .navside .toggle:checked + .slider:before {
   transform: translateX(2em);
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #6b7280; /* Gray color similar to Tailwind's gray-500 */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1f2937; /* Dark background to blend with the table's theme */
 }
