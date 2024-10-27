@@ -1,17 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
-
-import Depositmodal from "../../modals/Depositmodal";
-import {Footer} from "../../footer/Footer";
+import React, { useContext, useState, useEffect } from "react";
 import Navbar from "../navbar/Navbar";
 import Notifiy from "../../notify/Notifiy";
 import Preloader from "../../preloader/Preloader";
-import Result from "../../flipresult/Result";
-import { ShopContext } from "../../../utils/contextShop";
+import Footer from "../../footer/Footer";
 import Upcoming from "../../upcoming/Upcoming";
+import { useNavigate } from "react-router-dom";
+import { ShopContext } from "../../../utils/contextShop";
+import Result from "../../flipresult/Result";
+import { useAddress } from "@thirdweb-dev/react";
+import Depositmodal from "../../modals/Depositmodal";
 import Usernamemodal from "../../modals/Usernamemodal";
 import Webhooknotify from "../../modals/Webhooknotify";
-import { useAddress } from "@thirdweb-dev/react";
-import { useNavigate } from "react-router-dom";
 
 function Layout({ children, setCurrentChain }) {
   const address = useAddress();

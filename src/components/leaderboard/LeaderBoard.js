@@ -16,7 +16,7 @@ export default function LeaderBoard() {
 
   const getLeaderboard = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/info/leader_board`;
+      const endpoint = `${LOCAL_URL}/leader_board`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };
@@ -37,8 +37,6 @@ export default function LeaderBoard() {
     }
   };
 
-  const amountToWin = [900, 500, 300, 100, 100, 100];
-
   useEffect(() => {
     if (loading) {
       getLeaderboard();
@@ -55,12 +53,12 @@ export default function LeaderBoard() {
       </h3>
       {data?.length !== 0 ? (
         <div className="flex justify-center">
-          <div className="grid scroll-m-0 overflow-y-scroll h-[80vh] pb-16 scroll-smooth px-4">
+          <div className="grid gap-5 scroll-m-0 overflow-y-scroll h-[80vh] pb-16 scroll-smooth px-4">
             {data?.map((data, index) => (
               <Card
                 walletId={shortenAddress(String(data.player))}
                 totalEth={data.totalAmountPlayed}
-                totalToWin={amountToWin[index]}
+                totalWon={data.totalWinnings}
                 positionNumber={index + 1}
                 positionAph="st"
               />

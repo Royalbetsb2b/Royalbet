@@ -111,7 +111,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="font-bold text-white mt-8">Live Wins</div>
+          <div className="font-bold text-white mt-8">Live Bets</div>
           <HistoryTable />
         </div>
       ) : (

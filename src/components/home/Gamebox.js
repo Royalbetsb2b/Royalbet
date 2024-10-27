@@ -11,7 +11,7 @@ export default function Gamebox({
 }) {
   return (
     <div
-      className="flex flex-col justify-center items-start gap-9 flex-[1_0_0] pt-[8rem] md:pt-52 pb-6 px-2 md:px-6 cursor-pointer text-[#fff] font-semibold h-[240px] sm:h-[300px] md:h-[458px] "
+      className="flex flex-col justify-center items-start gap-9 flex-[1_0_0] pt-[8rem] md:pt-52 pb-6 px-2 md:px-6 cursor-pointer text-[#fff] font-semibold h-[240px] sm:h-[300px] md:h-[358px] "
       key={keymap}
       onClick={() => status === "active" && setSelectedGame(gameName)}
       style={{

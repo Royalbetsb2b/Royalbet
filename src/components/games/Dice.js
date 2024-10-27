@@ -44,7 +44,7 @@ export default function Dice({ setSelectedGame }) {
     const selected_choice = (newselect * 100) / 6;
 
     setTimeout(() => {
-      play(gametype, winChance, amount, range, searchParams);
+      play(gametype, selected_choice, amount, range, payout, searchParams);
     }, 500);
   };
 
@@ -195,9 +195,9 @@ export default function Dice({ setSelectedGame }) {
 
         <div className="flex justify-center mt-5">
           <div className="px-3 mb-6 md:mb-5 flex flex-col justify-center items-center">
-            {/* {switchWalletType === "local" && (
+            {switchWalletType === "local" && (
               <small className="text-white">Enter amount in dollars</small>
-            )} */}
+            )}
             <label className="border-2 border-[#090CA9] rounded pl-5 py-5 h-10 flex justify-center items-center">
               <input
                 className="w-[100%] bg-transparent outline-none text-[#fff] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
