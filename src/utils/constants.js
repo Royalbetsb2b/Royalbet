@@ -104,4 +104,4 @@ export function convertBigNumberToNumber(input) {
 
 //live  --  https://royalbets-backend.onrender.com
 //local -- http://localhost:8000
-export const LOCAL_URL = "https://royalbets-backend.onrender.com";
+export const LOCAL_URL = "http://localhost:8000";

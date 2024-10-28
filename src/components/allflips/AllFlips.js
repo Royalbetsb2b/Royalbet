@@ -14,7 +14,7 @@ function AllFlips() {
 
   const getRecents = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/recent_plays`;
+      const endpoint = `${LOCAL_URL}/info/recent_plays`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };

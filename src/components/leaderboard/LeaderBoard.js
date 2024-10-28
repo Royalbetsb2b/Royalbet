@@ -16,7 +16,7 @@ export default function LeaderBoard() {
 
   const getLeaderboard = async () => {
     try {
-      const endpoint = `${LOCAL_URL}/leader_board`;
+      const endpoint = `${LOCAL_URL}/info/leader_board`;
       const headers = {
         "Content-Type": "application/json", // You may include this header if required by the API
       };

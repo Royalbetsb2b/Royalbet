@@ -130,7 +130,7 @@ export const ShopContextProvider = (props) => {
         data = responsePrice.USD;
       }
 
-      const endpoint = `${LOCAL_URL}/game_played`;
+      const endpoint = `${LOCAL_URL}/info/game_played`;
       const headers = {
         // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -166,7 +166,7 @@ export const ShopContextProvider = (props) => {
   ) => {
     try {
       setLoading(true);
-      const endpoint = `${LOCAL_URL}/game_recent`;
+      const endpoint = `${LOCAL_URL}/info/game_recent`;
       const headers = {
         // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -192,7 +192,7 @@ export const ShopContextProvider = (props) => {
   const loginWallet = async (addresssub, username) => {
     try {
       // setLoading(true);
-      const endpoint = `${LOCAL_URL}/account_signin_signup`;
+      const endpoint = `${LOCAL_URL}/auth/account_signin_signup`;
       const headers = {
         // Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -228,7 +228,7 @@ export const ShopContextProvider = (props) => {
 
       const data = responsePrice.USD;
 
-      const endpoint = `${LOCAL_URL}/deposit`;
+      const endpoint = `${LOCAL_URL}/wallet/deposit`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -249,7 +249,7 @@ export const ShopContextProvider = (props) => {
   const withdrawalInWallet = async (asset, address, amount, convert_price) => {
     try {
       setLoading(true);
-      const endpoint = `${LOCAL_URL}/withdraw`;
+      const endpoint = `${LOCAL_URL}/wallet/withdraw`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -273,7 +273,7 @@ export const ShopContextProvider = (props) => {
   const checkAddressCorrect = async (address_check, chain, asset) => {
     try {
       setLoading(true);
-      const endpoint = `${LOCAL_URL}/verify_address/${address_check}/${chain}/${asset}`;
+      const endpoint = `${LOCAL_URL}/info/verify_address/${address_check}/${chain}/${asset}`;
       const token = await localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -411,7 +411,7 @@ export const ShopContextProvider = (props) => {
           return;
         }
 
-        const endpoint = `${LOCAL_URL}/place_bet`;
+        const endpoint = `${LOCAL_URL}/bet/place_bet`;
         const token = await localStorage.getItem("token");
         const headers = {
           Authorization: `Bearer ${token}`,
