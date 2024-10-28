@@ -59,7 +59,10 @@ export function Footer() {
             <a href="/" className="cursor-pointer hover:text-gray-300">
               RoyalBets
             </a>
-            . All Rights Reserved.
+            . All Rights Reserved. - Powered by{" "}
+            <a href="https://x.com/launchmycasino" className="cursor-pointer hover:text-gray-300">
+              LaunchMyCasino
+            </a>
           </span>
         </div>
       </div>
