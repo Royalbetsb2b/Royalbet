@@ -29,7 +29,9 @@ function HistoryTable() {
   }, [loading]);
 
   return (
-    <div className="relative flex justify-center w-full px-4">
+    <div className="relative flex flex-col justify-center items-center w-full px-4 mt-10 md:mt-20">
+      <div className="font-bold text-white">Live Bets</div>
+
       <div className="m-5 bg-[#130D25] w-full md:w-[83%] lg:w-[70%]">
         {/* Responsive Table */}
         <div className="overflow-x-auto custom-scrollbar">

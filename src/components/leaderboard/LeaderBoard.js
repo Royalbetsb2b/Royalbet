@@ -21,7 +21,6 @@ export default function LeaderBoard() {
         "Content-Type": "application/json", // You may include this header if required by the API
       };
       const response = await makeCall(endpoint, {}, headers, "get");
-      console.log(response, "inside leaderboard");
       if (response.status) {
         // sort the response by max in payout
         const sortedData = response.data.sort((a, b) => b.payout - a.payout);
@@ -36,6 +35,8 @@ export default function LeaderBoard() {
       console.log(error);
     }
   };
+
+  const amountToWin = [900, 500, 300, 100, 100, 100];
 
   useEffect(() => {
     if (loading) {
@@ -58,7 +59,7 @@ export default function LeaderBoard() {
               <Card
                 walletId={shortenAddress(String(data.player))}
                 totalEth={data.totalAmountPlayed}
-                totalWon={data.totalWinnings}
+                totalWon={amountToWin[index]}
                 positionNumber={index + 1}
                 positionAph="st"
               />

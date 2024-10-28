@@ -112,8 +112,6 @@ export const ShopContextProvider = (props) => {
 
       let data = 0;
       if (chain !== "wallet") {
-        // console.log(chain, "checking other things");
-
         const apiUrl = `https://min-api.cryptocompare.com/data/price?fsym=${
           chain === "BSC" ? "BNB" : chain
         }&tsyms=USD`;
@@ -131,8 +129,9 @@ export const ShopContextProvider = (props) => {
       }
 
       const endpoint = `${LOCAL_URL}/info/game_played`;
+      const token = await localStorage.getItem("token");
       const headers = {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
       const body = {
@@ -155,39 +154,39 @@ export const ShopContextProvider = (props) => {
   };
 
   //call to store recent
-  const gameRecent = async (
-    type,
-    is_win,
-    amount_played,
-    payout,
-    player,
-    requestId,
-    chain
-  ) => {
-    try {
-      setLoading(true);
-      const endpoint = `${LOCAL_URL}/info/game_recent`;
-      const headers = {
-        // Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-      const body = {
-        type: type,
-        is_win: is_win,
-        wallet: chain === "wallet" ? "local" : "live",
-        amount_played: amount_played,
-        payout: payout,
-        player: player,
-        chain: chain,
-        duplicate_id: requestId,
-      };
-      const response = await makeCall(endpoint, body, headers, "post");
-      // console.log(response, "check check check something");
-    } catch (error) {
-      setLoading(false);
-      console.log(error, "catch error");
-    }
-  };
+  // const gameRecent = async (
+  //   type,
+  //   is_win,
+  //   amount_played,
+  //   payout,
+  //   player,
+  //   requestId,
+  //   chain
+  // ) => {
+  //   try {
+  //     setLoading(true);
+  //     const endpoint = `${LOCAL_URL}/info/game_played`;
+  //     const headers = {
+  //       // Authorization: `Bearer ${token}`,
+  //       "Content-Type": "application/json",
+  //     };
+  //     const body = {
+  //       type: type,
+  //       is_win: is_win,
+  //       wallet: chain === "wallet" ? "local" : "live",
+  //       amount_played: amount_played,
+  //       payout: payout,
+  //       player: player,
+  //       chain: chain,
+  //       duplicate_id: requestId,
+  //     };
+  //     const response = await makeCall(endpoint, body, headers, "post");
+  //     // console.log(response, "check check check something");
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error, "catch error");
+  //   }
+  // };
 
   const loginWallet = async (addresssub, username) => {
     try {
@@ -324,18 +323,18 @@ export const ShopContextProvider = (props) => {
         setConfettiLoss(true);
       }
 
-      const { gameType, player, amountPlayed, payout, isWin, requestId } =
-        log[0].data;
+      // const { gameType, player, amountPlayed, payout, isWin, requestId } =
+      //   log[0].data;
 
-      await gameRecent(
-        gameType,
-        isWin,
-        amountPlayed,
-        payout,
-        player,
-        requestId,
-        "metamask"
-      );
+      // await gameRecent(
+      //   gameType,
+      //   isWin,
+      //   amountPlayed,
+      //   payout,
+      //   player,
+      //   requestId,
+      //   "metamask"
+      // );
     }
   };
 
@@ -462,15 +461,15 @@ export const ShopContextProvider = (props) => {
         );
       }
 
-      await gameRecent(
-        gameTypeRecent,
-        winRecent,
-        AmountRecent,
-        payoutRecent,
-        playerRecent,
-        duplicateRecent,
-        "wallet"
-      );
+      // await gameRecent(
+      //   gameTypeRecent,
+      //   winRecent,
+      //   AmountRecent,
+      //   payoutRecent,
+      //   playerRecent,
+      //   duplicateRecent,
+      //   "wallet"
+      // );
     } catch (error) {
       console.log(error, "error ini");
       setloaderActive(false);

@@ -96,7 +96,7 @@ export default function Home() {
             Copy this platform with your own branding and start earning fees on
             every bet.
           </div> */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-10 lg:w-[70%] lg:p-[5px] p-[20px] w-[100%] md:ml-0">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 mt-10 lg:w-[70%] lg:p-4 p-4 w-full">
             {gamesAvailable.map((data, index) => (
               <Gamebox
                 key={index}
@@ -111,7 +111,6 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="font-bold text-white mt-8">Live Bets</div>
           <HistoryTable />
         </div>
       ) : (

@@ -22,7 +22,6 @@ function Flip({ setSelectedGame }) {
   } = useContext(ShopContext);
 
   const [searchParams] = useSearchParams();
-  // console.log(searchParams.get("address"), "getting query for referrals"); // ▶ URLSearchParams {}
   const [selectedChoice, setSelectedChoice] = useState();
   const [amount, setAmount] = useState(0);
   const [gametype, setGameType] = useState("");
@@ -30,12 +29,10 @@ function Flip({ setSelectedGame }) {
   const [payout, setPayout] = useState(0);
 
   const handleChoice = (event) => {
-    console.log("lets seee", event.target.value);
     setSelectedMode(event.target.value);
     setSelectedChoice(event.target.value === "heads" ? 1 : 0);
   };
   const handleAmountChange = (event) => {
-    // console.log("more seeing", event.target.value);
     setSelectedOption(event.target.value);
     setAmount(event.target.value);
     setPayout(event.target.value * 2);
@@ -58,7 +55,6 @@ function Flip({ setSelectedGame }) {
     }
 
     setGameType("flip");
-    console.log(payout, "her inside ooooo two");
   }, [playingas, payout, switchWalletType]);
 
   return (

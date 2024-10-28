@@ -102,6 +102,6 @@ export function convertBigNumberToNumber(input) {
   }
 }
 
-//live  --  https://royalbets-backend.onrender.com
+//live  --  https://royalbets-backend-6jr8.onrender.com
 //local -- http://localhost:8000
-export const LOCAL_URL = "https://royalbets-backend.onrender.com";
+export const LOCAL_URL = "https://royalbets-backend-6jr8.onrender.com";

@@ -36,7 +36,11 @@ function Card({ walletId, totalEth, totalWon, positionNumber, positionAph }) {
         <div className="flex flex-col md:w-44 w-24 items-center">
           <h2 className="game-font text-[8px]">Price</h2>
           <b>
-            {"$"} {totalWon}
+            {"$"}{" "}
+            {Number(totalWon).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </b>
         </div>
       </div>
