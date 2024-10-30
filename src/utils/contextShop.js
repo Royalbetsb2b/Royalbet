@@ -153,41 +153,6 @@ export const ShopContextProvider = (props) => {
     }
   };
 
-  //call to store recent
-  // const gameRecent = async (
-  //   type,
-  //   is_win,
-  //   amount_played,
-  //   payout,
-  //   player,
-  //   requestId,
-  //   chain
-  // ) => {
-  //   try {
-  //     setLoading(true);
-  //     const endpoint = `${LOCAL_URL}/info/game_played`;
-  //     const headers = {
-  //       // Authorization: `Bearer ${token}`,
-  //       "Content-Type": "application/json",
-  //     };
-  //     const body = {
-  //       type: type,
-  //       is_win: is_win,
-  //       wallet: chain === "wallet" ? "local" : "live",
-  //       amount_played: amount_played,
-  //       payout: payout,
-  //       player: player,
-  //       chain: chain,
-  //       duplicate_id: requestId,
-  //     };
-  //     const response = await makeCall(endpoint, body, headers, "post");
-  //     // console.log(response, "check check check something");
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.log(error, "catch error");
-  //   }
-  // };
-
   const loginWallet = async (addresssub, username) => {
     try {
       // setLoading(true);
@@ -342,7 +307,7 @@ export const ShopContextProvider = (props) => {
     gametype,
     selectedChoice,
     amount,
-    range,
+    gameChance,
     payout,
     searchParams
   ) => {
@@ -423,6 +388,7 @@ export const ShopContextProvider = (props) => {
           referral: refValue,
           betAmount: amount,
           feeReceiver: recieverValue,
+          gameChance: gameChance,
         };
         const response = await makeCall(endpoint, body, headers, "post");
         setGameResult(true);

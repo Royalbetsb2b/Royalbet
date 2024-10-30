@@ -44,7 +44,7 @@ export default function Dice({ setSelectedGame }) {
     const selected_choice = (newselect * 100) / 6;
 
     setTimeout(() => {
-      play(gametype, selected_choice, amount, range, payout, searchParams);
+      play(gametype, selected_choice, amount, winChance, payout, searchParams);
     }, 500);
   };
 
