@@ -13,7 +13,7 @@ export default function Localwallet() {
       className="relative p-[1px] rounded-lg bg-gradient-to-r from-[#090CA9] to-[#BE36EB] hover:bg-[#BE36EB] cursor-pointer"
       onClick={() => setDepositModal(!depositModal)}
     >
-      <div className="bg-[#130D25] rounded-lg px-3 py-2 flex">
+      <div className="bg-[#130D25] rounded-lg px-3 py-2 flex items-center">
         <div className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
